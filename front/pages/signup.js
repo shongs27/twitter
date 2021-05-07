@@ -19,25 +19,29 @@ function Signup({ setIsLoggedIn }) {
   //2 - 일일히 만들기
   const [PasswordCheck, setPasswordCheck] = useState("");
   const [PasswordError, setPasswordError] = useState(false);
+
   const onChangePasswordCheck = useCallback(
     (e) => {
       setPasswordCheck(e.target.value);
-      setPasswordError(e.taget.value !== Password);
+      setPasswordError(e.target.value !== Password);
     },
     [Password]
   );
-  const [Term, setTerm] = useState("");
-  const [TermError, setTermError] = useState(false);
 
+  const [Term, setTerm] = useState(false);
+
+  const [TermError, setTermError] = useState(false);
   const onChangeTerm = useCallback((e) => {
-    setTerm(e.taget.checked);
+    console.log(e.target.checked);
+    setTerm(e.target.checked);
     setTermError(false);
   }, []);
+
   const onSubmit = useCallback(() => {
     if (Password !== PasswordCheck) {
       return setPasswordError(true);
     }
-    if (!term) {
+    if (!Term) {
       return setTermError(true);
     }
     console.log(Id, Nickname, Password);
@@ -73,7 +77,7 @@ function Signup({ setIsLoggedIn }) {
             />
           </div>
           <div>
-            <label htmlFor="user-PasswordCheck">패스워드</label>
+            <label htmlFor="user-PasswordCheck">패스워드 확인</label>
             <br />
             <Input
               name="user-PasswordCheck"

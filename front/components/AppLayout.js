@@ -5,6 +5,7 @@ import { Menu, Input, Row, Col } from "antd";
 import styled from "styled-components";
 import UserProfile from "../components/UserProfile";
 import LoginForm from "../components/LoginForm";
+import { useSelector } from "react-redux";
 
 //CSS inline은 지양해야 한다 =>
 
@@ -22,8 +23,11 @@ const SearchInput = styled(Input.Search)`
 // );
 
 function AppLayout({ children }) {
-  //백엔드 안만들었으니 더미 데이터로 state만듦
-  const [IsLoggedIn, setIsLoggedIn] = useState(false);
+  //1- 백엔드 안만들었으니 더미 데이터로 state만듦
+  // const [IsLoggedIn, setIsLoggedIn] = useState(false);
+
+  //2- redux
+  const isLoggedIn = useSelector((state) => state.user.isLoggedIn);
 
   return (
     <div>
@@ -47,11 +51,7 @@ function AppLayout({ children }) {
       <Row gutter={8}>
         {/* xs 모바일 / sm 태블릿 / md 작은PC lg,xl 대형화면 24등분을 기준 */}
         <Col xs={24} md={6}>
-          {IsLoggedIn ? (
-            <UserProfile setIsLoggedIn={setIsLoggedIn} />
-          ) : (
-            <LoginForm setIsLoggedIn={setIsLoggedIn} />
-          )}
+          {isLoggedIn ? <UserProfile /> : <LoginForm />}
         </Col>
 
         <Col xs={24} md={12}>

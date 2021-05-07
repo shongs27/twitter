@@ -4,10 +4,12 @@ import React from "react";
 import propTypes from "prop-types";
 import Head from "next/head"; //next에서 지원
 import "antd/dist/antd.css";
+import wrapper from "../store/configureStore";
 
 //Component는 일괄적용
 const NodeBird = ({ Component }) => {
   return (
+    // Provider항목은 버전업하면서 빠졌음
     <>
       <Head>
         <meta charSet="utf-8" />
@@ -23,4 +25,4 @@ NodeBird.propTypes = {
   Component: propTypes.elementType.isRequired,
 };
 
-export default NodeBird;
+export default wrapper.withRedux(NodeBird);

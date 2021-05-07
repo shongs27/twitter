@@ -2,6 +2,8 @@ import React, { useState, useCallback } from "react";
 import { Form, Input, Button } from "antd";
 import Link from "next/link";
 import useInput from "../hooks/useInput";
+import { useDispatch, useSelector } from "react-redux";
+import { loginAction } from "../reducers/user";
 
 // styled-component를 쓰는 이유
 // CSS inline에서 {} !== {} 로 인해 리렌더링
@@ -15,7 +17,10 @@ const FormWrapper = styled(Form)`
   padding: 18px;
 `;
 
-function LoginForm({ setIsLoggedIn }) {
+function LoginForm() {
+  const { isLoggedIn } = useSelector((state) => state.user);
+  const dispatch = useDispatch();
+
   //1방법. CustomHook - 지저분한 Form으로 인한 상태, 함수를 일시에 정리할 수 있다
   const [Id, onChangeId] = useInput("");
   //2방법. 컴포넌트에 props로 넘겨주는 함수는 useCallback을 꼭 써줘야 최적화가 된다
@@ -26,7 +31,7 @@ function LoginForm({ setIsLoggedIn }) {
   }, []);
   const onSubmitForm = useCallback(() => {
     console.log(Id, Password);
-    setIsLoggedIn(true);
+    dispatch(loginAction({ Id, Password }));
   }, [Id, Password]);
 
   return (

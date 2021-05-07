@@ -1,10 +1,15 @@
 import React, { useCallback } from "react";
 import { Card, Avatar, Button } from "antd";
+import { useDispatch } from "react-redux";
+
+import { logoutAction } from "../reducers/user";
 
 //트위터 게시글 Card로 하면 좋을 거 같다
-function UserProfile({ setIsLoggedIn }) {
+function UserProfile() {
+  const dispatch = useDispatch();
+
   const onLogOut = useCallback(() => {
-    setIsLoggedIn(false);
+    dispatch(logoutAction());
   }, []);
   return (
     <Card
