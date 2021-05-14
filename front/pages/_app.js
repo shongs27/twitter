@@ -5,6 +5,7 @@ import propTypes from "prop-types";
 import Head from "next/head"; //next에서 지원
 import "antd/dist/antd.css";
 import wrapper from "../store/configureStore";
+import withReduxSaga from "next-redux-saga";
 
 //Component는 일괄적용
 const NodeBird = ({ Component }) => {
@@ -25,4 +26,6 @@ NodeBird.propTypes = {
   Component: propTypes.elementType.isRequired,
 };
 
-export default wrapper.withRedux(NodeBird);
+// 1. redux HOC 로 감싸기
+// 2. reduxSga HOC 로 또 감싸기
+export default wrapper.withRedux(withReduxSaga(NodeBird));

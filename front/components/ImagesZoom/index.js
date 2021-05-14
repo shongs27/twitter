@@ -24,7 +24,7 @@ function ImagesZoom({ images, onClose }) {
       <SlickWrapper>
         <Slick
           initialSlide={0}
-          afterchange={(slide) => setCurrentSlide(slide)}
+          beforeChange={(slide) => setCurrentSlide(slide)}
           infinite
           arrows={false}
           slideToScroll={1}
