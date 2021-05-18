@@ -42,7 +42,7 @@ function AppLayout({ children }) {
   // const [IsLoggedIn, setIsLoggedIn] = useState(false);
 
   //2- redux
-  const isLoggedIn = useSelector((state) => state.user.isLoggedIn);
+  const me = useSelector((state) => state.user.me);
 
   return (
     <div>
@@ -68,7 +68,7 @@ function AppLayout({ children }) {
       <Row gutter={8}>
         {/* xs 모바일 / sm 태블릿 / md 작은PC lg,xl 대형화면 24등분을 기준 */}
         <Col xs={24} md={6}>
-          {isLoggedIn ? <UserProfile /> : <LoginForm />}
+          {me ? <UserProfile /> : <LoginForm />}
         </Col>
 
         <Col xs={24} md={12}>

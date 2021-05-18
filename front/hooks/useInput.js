@@ -7,5 +7,5 @@ export default function (initialValue = null) {
     setValue(e.target.value);
   }, []);
 
-  return [Value, handler];
+  return [Value, handler, setValue];
 }

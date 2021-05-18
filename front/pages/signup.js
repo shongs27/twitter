@@ -12,7 +12,7 @@ const ErrorMessage = styled.div`
 
 function Signup({ setIsLoggedIn }) {
   //1 - CustomHook
-  const [Id, onChangeId] = useInput("");
+  const [email, onChangeEmail] = useInput("");
   const [Nickname, onChangeNickname] = useInput("");
   const [Password, onChangePassword] = useInput("");
 
@@ -44,8 +44,9 @@ function Signup({ setIsLoggedIn }) {
     if (!Term) {
       return setTermError(true);
     }
-    console.log(Id, Nickname, Password);
-  }, [Password, PasswordCheck, Term]);
+    console.log(email, Nickname, Password);
+    dispatch
+  }, [email, Password, PasswordCheck, Term]);
   //3 - 폼 라이브러리 이용하기
   return (
     <>
@@ -54,7 +55,7 @@ function Signup({ setIsLoggedIn }) {
           <div>
             <label htmlFor="user-id">아이디</label>
             <br />
-            <Input name="user-id" value={Id} required onChange={onChangeId} />
+            <Input name="user-id" value={email} required onChange={onChangeEmail} />
           </div>
           <div>
             <label htmlFor="user-nick">닉네임</label>

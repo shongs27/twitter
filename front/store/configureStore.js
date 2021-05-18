@@ -16,7 +16,7 @@ const loggerMiddleware =
 
 const configureStore = () => {
   const sagaMiddleware = creasteSagaMiddleware();
-  const middlewares = [loggerMiddleware];
+  const middlewares = [sagaMiddleware];
   const enhancer =
     process.env.NODE_ENV === "production"
       ? compose(applyMiddleware(...middlewares))

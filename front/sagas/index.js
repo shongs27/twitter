@@ -1,67 +1,24 @@
 //saga의 이펙트
-import { all, call, fork, put } from "redux-saga/effects";
-import axios from "axios";
+import {
+  all,
+  call,
+  fork,
+  put,
+  take,
+  takeEvery,
+  takeLeading,
+  takeLatest,
+  throttle,
+  delay,
+} from "redux-saga/effects";
+//take - evnetlistener
+//takeLeading - 매번 누를때 첫번째꺼만
+//takeLatest - 매번 누를떄 같은 '응답' 취소하고 마지막꺼만
+//throttle - 아에 반복 요청이 안가도록 막아줌 (takeLatest와 다르게 백엔드에서 검사할 필요 없음)
 
-function logInAPI(data, a, b, c) {
-  return axios.post("/api/login", data);
-}
-
-function* logIn(action) {
-  try {
-    //call 동기 블록킹 fork 비동기 논블록킹
-    //ex) call(함수, 인자..)
-    const result = yield call(logInAPI, action.data);
-    //put은 dispatch와 같다?
-    yield put({
-      type: "LOG_IN_SUCCESS",
-      data: result.data,
-    });
-  } catch (err) {
-    yield put({
-      type: "LOG_IN_FAILURE",
-      data: err.response.data,
-    });
-  }
-}
-
-function logOutAPI() {
-  return axios.post("/api/logout");
-}
-
-function* logOut() {
-  try {
-    const result = yield call(logOutAPI);
-    yield put({
-      type: "LOG_OUT_SUCCESS",
-      data: result.data,
-    });
-  } catch (err) {
-    yield put({
-      type: "LOG_OUT_FAILURE",
-      data: err.response.data,
-    });
-  }
-}
-
-function addPostAPI(data) {
-  return axios.post("/api/post", data);
-}
-
-function* addPost(action) {
-  try {
-    const result = yield call(addPostAPI, action.data);
-    yield put({
-      type: "ADD_POST_SUCCESS",
-      data: result.data,
-    });
-  } catch (err) {
-    yield put({
-      type: "ADD_POST_FAILURE",
-      data: err.response.data,
-    });
-  }
-}
+import postSaga from "./post";
+import userSaga from "./user";
 
 export default function* rootSaga() {
-  yield all([fork(watchLogin)]);
+  yield all([fork(postSaga), fork(userSaga)]);
 }

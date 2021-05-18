@@ -3,7 +3,7 @@ import { Form, Input, Button } from "antd";
 import Link from "next/link";
 import useInput from "../hooks/useInput";
 import { useDispatch, useSelector } from "react-redux";
-import { loginAction } from "../reducers/user";
+import { loginRequestAction } from "../reducers/user";
 
 // styled-component를 쓰는 이유
 // CSS inline에서 {} !== {} 로 인해 리렌더링
@@ -18,11 +18,11 @@ const FormWrapper = styled(Form)`
 `;
 
 function LoginForm() {
-  const { isLoggedIn } = useSelector((state) => state.user);
+  const { logInLoading } = useSelector((state) => state.user);
   const dispatch = useDispatch();
 
   //1방법. CustomHook - 지저분한 Form으로 인한 상태, 함수를 일시에 정리할 수 있다
-  const [Id, onChangeId] = useInput("");
+  const [email, onChangeEmail] = useInput("");
   //2방법. 컴포넌트에 props로 넘겨주는 함수는 useCallback을 꼭 써줘야 최적화가 된다
   const [Password, setPassword] = useState("");
 
@@ -30,16 +30,21 @@ function LoginForm() {
     setPassword(e.target.value);
   }, []);
   const onSubmitForm = useCallback(() => {
-    console.log(Id, Password);
-    dispatch(loginAction({ Id, Password }));
-  }, [Id, Password]);
+    console.log(email, Password);
+    dispatch(loginRequestAction({ email, Password }));
+  }, [email, Password]);
 
   return (
     <FormWrapper onFinish={onSubmitForm}>
       <div>
-        <label htmlFor="user-id">아이디</label>
+        <label htmlFor="user-email">이메일</label>
         <br />
-        <Input name="user-id" value={Id} onChange={onChangeId} required />
+        <Input
+          name="user-email"
+          value={email}
+          onChange={onChangeEmail}
+          required
+        />
       </div>
       <div>
         <label htmlFor="user-password">비밀번호</label>
@@ -54,10 +59,10 @@ function LoginForm() {
       </div>
       <div>
         <ButtonWrapper>
-          <Button type="primary" htmlType="submit" loading={false}>
-            {/* Link에 href 넣고 a에는 안넣는게 좋다  */}로그인
+          <Button type="primary" htmlType="submit" loading={logInLoading}>
+            로그인
           </Button>
-
+          {/* a 말고 Link에 href 넣는다 */}
           <Link href="/signup">
             <a>
               <Button>회원가입</Button>

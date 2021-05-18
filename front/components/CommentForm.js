@@ -1,17 +1,29 @@
 import React, { useCallback } from "react";
 import { Form, Input, Button } from "antd";
 import PropTypes from "prop-types";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import useInput from "../hooks/useInput";
 
 function CommentForm({ post }) {
+  const dispatch = useDispatch();
   const id = useSelector((state) => state.user.me?.id);
-  const [commentText, setChangeCommentText] = useInput("");
+  const { addCommentDone } = useSelector((state) => state.post);
+
+  const [commentText, setChangeCommentText, setCommentText] = useInput("");
+
+  useEffect(() => {
+    if (addCommentDone) setCommentText("");
+  }, [addCommentDone]);
+
   const onSubmitComment = useCallback(() => {
     // 클릭해도 안되는 문제 ? (기술부채)
-    console.log("클릭 안되는 데스웅?");
+
     console.log(post.id, commentText);
-  }, [commentText]);
+    dispatch({
+      type: ADD_COMMENT_REQUEST,
+      data: { content: commentText, postId: post.id, userId, id },
+    });
+  }, [commentText, id]);
 
   return (
     <Form onFinish={onSubmitComment}>
