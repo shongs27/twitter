@@ -1,6 +1,6 @@
 import React from "react";
 import Link from "next/link";
-import PropTypes from "prop-types";
+import propTypes from "prop-types";
 
 const PostCardContent = ({ postData }) => (
   <div>
@@ -17,6 +17,6 @@ const PostCardContent = ({ postData }) => (
   </div>
 );
 
-PostCardContent.PropTypes = { postData: PropTypes.string.isRequired };
+PostCardContent.propTypes = { postData: propTypes.string.isRequired };
 
 export default PostCardContent;

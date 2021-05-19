@@ -7,7 +7,9 @@ import useInput from "../hooks/useInput";
 function CommentForm({ post }) {
   const dispatch = useDispatch();
   const id = useSelector((state) => state.user.me?.id);
-  const { addCommentDone } = useSelector((state) => state.post);
+  const { addCommentDone, addCommentLoading } = useSelector(
+    (state) => state.post
+  );
 
   const [commentText, setChangeCommentText, setCommentText] = useInput("");
 
@@ -16,12 +18,9 @@ function CommentForm({ post }) {
   }, [addCommentDone]);
 
   const onSubmitComment = useCallback(() => {
-    // 클릭해도 안되는 문제 ? (기술부채)
-
-    console.log(post.id, commentText);
     dispatch({
       type: ADD_COMMENT_REQUEST,
-      data: { content: commentText, postId: post.id, userId, id },
+      data: { content: commentText, postId: post.id, userId: id },
     });
   }, [commentText, id]);
 
@@ -34,9 +33,16 @@ function CommentForm({ post }) {
           rows={4}
         />
         <Button
-          style={{ position: "absolute", right: 0, bottom: -40 }}
+          style={{
+            position: "absolute",
+            right: 0,
+            bottom: -40,
+            // zindex할 정도로 button이 뒤에 있는가?
+            zIndex: 1,
+          }}
           type="primary"
           htmlType="submit"
+          loading={addCommentLoading}
         >
           삐약
         </Button>

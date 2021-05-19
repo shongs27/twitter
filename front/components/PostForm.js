@@ -1,7 +1,7 @@
 import React, { useCallback, useState, useRef, useEffect } from "react";
 import { Form, Input, Button } from "antd";
 import { useDispatch, useSelector } from "react-redux";
-import { addPOST } from "../reducers/post";
+import { addPost } from "../reducers/post";
 
 const PostForm = () => {
   const { imagePaths, addPostDone } = useSelector((state) => state.post);
@@ -16,7 +16,7 @@ const PostForm = () => {
   }, [addPostDone]);
 
   const onSubmit = useCallback(() => {
-    dispatch(addPOST(text));
+    dispatch(addPost(text));
   }, [text]);
 
   const imageInput = useRef();

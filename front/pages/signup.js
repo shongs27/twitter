@@ -1,22 +1,22 @@
 import React, { useCallback, useState } from "react";
-import AppLayout from "../components/AppLayout";
 import { Form, Input, Checkbox, Button } from "antd";
-import LoginForm from "../components/LoginForm";
 import PropTypes from "prop-types";
 import styled from "styled-components";
 import useInput from "../hooks/useInput";
+import AppLayout from "../components/AppLayout";
+import LoginForm from "../components/LoginForm";
 
 const ErrorMessage = styled.div`
   color: "red";
 `;
 
 function Signup({ setIsLoggedIn }) {
-  //1 - CustomHook
+  // 1 - CustomHook
   const [email, onChangeEmail] = useInput("");
   const [Nickname, onChangeNickname] = useInput("");
   const [Password, onChangePassword] = useInput("");
 
-  //2 - 일일히 만들기
+  // 2 - 일일히 만들기
   const [PasswordCheck, setPasswordCheck] = useState("");
   const [PasswordError, setPasswordError] = useState(false);
 
@@ -46,8 +46,9 @@ function Signup({ setIsLoggedIn }) {
     }
     console.log(email, Nickname, Password);
     dispatch
+    
   }, [email, Password, PasswordCheck, Term]);
-  //3 - 폼 라이브러리 이용하기
+  // 3 - 폼 라이브러리 이용하기
   return (
     <>
       <AppLayout>
@@ -97,9 +98,10 @@ function Signup({ setIsLoggedIn }) {
             {TermError && <ErrorMessage>약관에 동의하셔야 합니다</ErrorMessage>}
           </div>
           <div style={{ marginTop: 10 }}>
-            <Button type="primary" htmlType="submit">
-              가입하기
+            <Button type="primary" htmlType="submit">              
+              가입하기              
             </Button>
+
           </div>
         </Form>
       </AppLayout>

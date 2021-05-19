@@ -1,13 +1,12 @@
 import React, { useState, useCallback } from "react";
 import { Form, Input, Button } from "antd";
 import Link from "next/link";
-import useInput from "../hooks/useInput";
 import { useDispatch, useSelector } from "react-redux";
-import { loginRequestAction } from "../reducers/user";
-
 // styled-component를 쓰는 이유
 // CSS inline에서 {} !== {} 로 인해 리렌더링
 import styled from "styled-components";
+import useInput from "../hooks/useInput";
+import { loginRequestAction } from "../reducers/user";
 
 const ButtonWrapper = styled.div`
   margin-top: 20px;

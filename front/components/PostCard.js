@@ -14,6 +14,9 @@ import PostImages from "./PostImages";
 import CommentForm from "./CommentForm";
 import PostCardContent from "./PostCardContent";
 
+import { useSelector, useDispatch } from "react-redux";
+import { REMOVE_POST_REQUEST } from "../reducers/post";
+
 function PostCard({ post }) {
   const id = useSelector((state) => state.user.me?.id);
   const [liked, setLiked] = useState(false);
@@ -23,6 +26,15 @@ function PostCard({ post }) {
   }, []);
   const onToggleComment = useCallback(() => {
     setCommentFormOpened((prev) => !prev);
+  }, []);
+
+  const { removePostLoading } = useSelector((state) => state.post);
+
+  const onRemovePost = useCallback(() => {
+    dispatchEvent({
+      type: REMOVE_POST_REQUEST,
+      data: post.id,
+    });
   }, []);
 
   return (
@@ -48,7 +60,13 @@ function PostCard({ post }) {
                 {id && post.User.id === id ? (
                   <>
                     <Button>수정</Button>
-                    <Button type="danger">삭제</Button>
+                    <Button
+                      type="danger"
+                      loading={removePostLoading}
+                      onClick={onRemovePost}
+                    >
+                      삭제
+                    </Button>
                   </>
                 ) : (
                   <Button>신고</Button>

@@ -1,3 +1,5 @@
+import shortId from "shortid";
+
 const initialState = {
   mainPosts: [
     {
@@ -16,7 +18,8 @@ const initialState = {
         },
         { src: "https://www.woowahan.com/img/mobile/woowabros.jpg" },
       ],
-      Comments: [
+      Comments: [{
+        id: shortId.generate(),
         {
           User: {
             nickname: "nero",
@@ -27,28 +30,38 @@ const initialState = {
           User: {
             nickname: "hero",
           },
-          content: "십새꺄 !",
-        },
-      ],
+          content: "얼른 사고 싶어요 ~!",
+        }],
+      }],
     },
   ],
   imagePaths: [],
   addPostLoading: false,
   addPostDone: false,
   addPostError: null,
+  removePostLoading: false,
+  removePostData: false,
+  removePostError: null,
+  addCommentLoading: false,
+  addCommentDone: false,
+  addCommentError: null,
 };
 
 export const ADD_POST_REQUEST = "ADD_POST_REQUEST";
 export const ADD_POST_SUCCESS = "ADD_POST_SUCCESS";
 export const ADD_POST_FAILURE = "ADD_POST_FAILURE";
 
+export const REMOVE_POST_REQUEST = "REMOVE_POST_REQUEST";
+export const REMOVE_POST_SUCCESS = "REMOVE_POST_SUCCESS";
+export const REMOVE_POST_FAILURE = "REMOVE_POST_FAILURE";
+
 export const ADD_COMMENT_REQUEST = "ADD_COMMENT_REQUEST";
 export const ADD_COMMENT_SUCCESS = "ADD_COMMENT_SUCCESS";
 export const ADD_COMMENT_FAILURE = "ADD_COMMENT_FAILURE";
 
-export const addPOST = (data) => ({
+export const addPost = (data) => ({
   type: ADD_POST_REQUEST,
-  data,
+  data: action.data,
 });
 
 export const addComment = (data) => ({
@@ -56,8 +69,10 @@ export const addComment = (data) => ({
   data,
 });
 
-const dummyPost = {
-  id: 2,
+const dummyPost = (data) => ({
+  //더미데이터 중복되지 않는거 만들기
+  id: data.id,
+  content: data.content,
   User: {
     id: 1,
     nickname: "제로초",
@@ -65,7 +80,16 @@ const dummyPost = {
   content: "더미데이터입니다",
   Images: [],
   Comments: [],
-};
+});
+
+const dummyComment = (data) => ({
+  id: shortId.generate(),
+  content: data,
+  User: {
+    id: 1,
+    nickname: "제로초",
+  },
+});
 
 // (이전상태, 액션) => 다음상태
 export default (state = initialState, action) => {
@@ -81,7 +105,7 @@ export default (state = initialState, action) => {
       return {
         ...state,
         //앞에다가 새로운 dummyPost를 추가해야 새게시글이 위로 올라가게 보여줄수 있다
-        mainPosts: [dummyPost, ...state.mainPosts],
+        mainPosts: [dummyPost(action.data), ...state.mainPosts],
         addPostLoading: false,
         addPostDone: true,
       };
@@ -91,6 +115,27 @@ export default (state = initialState, action) => {
         addPostLoading: false,
         addPostError: action.error,
       };
+      case REMOVE_POST_REQUEST:
+        return {
+          ...state,
+          removePostLoading: true,
+          removePostDone: false,
+          removePostError: null,
+        };
+      case REMOVE_POST_SUCCESS:
+        return {
+          ...state,
+          //앞에다가 새로운 dummyPost를 추가해야 새게시글이 위로 올라가게 보여줄수 있다
+          mainPosts: state.mainPosts.filter((v)=> v.id !== action.data),
+          removePostLoading: false,
+          removePostDone: true,
+        };
+      case REMOVE_POST_FAILURE:
+        return {
+          ...state,
+          removePostLoading: false,
+          removePostError: action.error,
+        };
     case ADD_COMMENT_REQUEST:
       return {
         ...state,
@@ -98,14 +143,22 @@ export default (state = initialState, action) => {
         addCommentDone: false,
         addCommentError: null,
       };
-    case ADD_COMMENT_SUCCESS:
+    case ADD_COMMENT_SUCCESS: {
+      const postIndex = state.mainPosts.findIndex(
+        (v) => v.id === action.data.postId
+      );
+      const post = { ...state.mainPosts[postIndex] };
+      post.Comments = [dummyComment(action.data.content), ...post.Comments];
+      const mainPosts = [...state.mainPosts];
+      mainPosts[postIndex] = post;
       return {
         ...state,
-        //앞에다가 새로운 dummyComment를 추가해야 새게시글이 위로 올라가게 보여줄수 있다
-        mainComments: [dummyComment, ...state.mainComments],
+        mainPosts,
         addCommentLoading: false,
         addCommentDone: true,
       };
+    }
+
     case ADD_COMMENT_FAILURE:
       return {
         ...state,
