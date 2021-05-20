@@ -1,4 +1,5 @@
 import shortId from "shortid";
+import produce from "immer";
 
 const initialState = {
   mainPosts: [
@@ -8,15 +9,17 @@ const initialState = {
         id: 1,
         nickname: "제로초",
       },
-      content: "첫 번쨰 게시글 #해시태그 #익스프레스",
+      content: "첫 번째 게시글",
       Images: [
         {
-          src: "https://i.pinimg.com/originals/04/7d/fe/047dfe5c5e49214a7de9bb2694e0eb68.png",
+          src: "https://bookthumb-phinf.pstatic.net/cover/137/995/13799585.jpg?udate=20180726",
         },
         {
-          src: "https://img1.daumcdn.net/thumb/R720x0.q80/?scode=mtistory2&fname=http%3A%2F%2Fcfile23.uf.tistory.com%2Fimage%2F2245354C5502AD4E3C5F1A",
+          src: "https://gimg.gilbut.co.kr/book/BN001958/rn_view_BN001958.jpg",
         },
-        { src: "https://www.woowahan.com/img/mobile/woowabros.jpg" },
+        {
+          src: "https://gimg.gilbut.co.kr/book/BN001998/rn_view_BN001998.jpg",
+        },
       ],
       Comments: [{
         id: shortId.generate(),
@@ -30,9 +33,9 @@ const initialState = {
           User: {
             nickname: "hero",
           },
-          content: "얼른 사고 싶어요 ~!",
-        }],
-      }],
+          content: "얼른 사고싶어요~",
+        }
+     }],
     },
   ],
   imagePaths: [],
@@ -91,81 +94,77 @@ const dummyComment = (data) => ({
   },
 });
 
-// (이전상태, 액션) => 다음상태
+// (이전상태, 액션) => 다음상태 (불변성 지켜가면서)
 export default (state = initialState, action) => {
-  switch (action.type) {
-    case ADD_POST_REQUEST:
-      return {
-        ...state,
-        addPostLoading: true,
-        addPostDone: false,
-        addPostError: null,
-      };
-    case ADD_POST_SUCCESS:
-      return {
-        ...state,
-        //앞에다가 새로운 dummyPost를 추가해야 새게시글이 위로 올라가게 보여줄수 있다
-        mainPosts: [dummyPost(action.data), ...state.mainPosts],
-        addPostLoading: false,
-        addPostDone: true,
-      };
-    case ADD_POST_FAILURE:
-      return {
-        ...state,
-        addPostLoading: false,
-        addPostError: action.error,
-      };
-      case REMOVE_POST_REQUEST:
-        return {
-          ...state,
-          removePostLoading: true,
-          removePostDone: false,
-          removePostError: null,
-        };
-      case REMOVE_POST_SUCCESS:
-        return {
-          ...state,
-          //앞에다가 새로운 dummyPost를 추가해야 새게시글이 위로 올라가게 보여줄수 있다
-          mainPosts: state.mainPosts.filter((v)=> v.id !== action.data),
-          removePostLoading: false,
-          removePostDone: true,
-        };
-      case REMOVE_POST_FAILURE:
-        return {
-          ...state,
-          removePostLoading: false,
-          removePostError: action.error,
-        };
-    case ADD_COMMENT_REQUEST:
-      return {
-        ...state,
-        addCommentLoading: true,
-        addCommentDone: false,
-        addCommentError: null,
-      };
-    case ADD_COMMENT_SUCCESS: {
-      const postIndex = state.mainPosts.findIndex(
-        (v) => v.id === action.data.postId
-      );
-      const post = { ...state.mainPosts[postIndex] };
-      post.Comments = [dummyComment(action.data.content), ...post.Comments];
-      const mainPosts = [...state.mainPosts];
-      mainPosts[postIndex] = post;
-      return {
-        ...state,
-        mainPosts,
-        addCommentLoading: false,
-        addCommentDone: true,
-      };
-    }
+  return produce(state, (draft) => {
+    switch (action.type) {
+      case ADD_POST_REQUEST:
+        draft.addPostLoading = true;
+        draft.addPostDone = false;
+        draft.addPostError = null;
+        break;
 
-    case ADD_COMMENT_FAILURE:
-      return {
-        ...state,
-        addCommentLoading: false,
-        addCommentError: action.error,
-      };
-    default:
-      return state;
-  }
+      case ADD_POST_SUCCESS:
+        //앞에다가 새로운 dummyPost를 추가해야 새게시글이 위로 올라가게 보여줄수 있다
+        draft.mainPosts.unshift(dummyPost(action.data));
+        draft.addPostLoading = false;
+        draft.addPostDone = true;
+        break;
+
+      case ADD_POST_FAILURE:
+        draft.addPostLoading = false;
+        draft.addPostError = action.error;        
+        break;
+      case REMOVE_POST_REQUEST:
+        draft.removePostLoading = true;
+        draft.removePostDone = false;
+        draft.removePostError = null;
+        break;
+
+     
+      case REMOVE_POST_SUCCESS:
+        draft.mainPosts = draft.mainPosts.filter((v) => v.id !== action.data);
+        draft.removePostLoading = false;
+        draft.removePostDone = true;
+        break;
+       
+      case REMOVE_POST_FAILURE:
+        draft.removePostLoading = false;
+        draft.removePostError = action.error;
+       
+      case ADD_COMMENT_REQUEST:
+        draft.addCommentLoading = true;
+        draft.addCommentDone = false;
+        draft.addCommentError = null;
+        break;
+
+      case ADD_COMMENT_SUCCESS: {
+        // const postIndex = state.mainPosts.findIndex(
+        //   (v) => v.id === action.data.postId
+        // );
+        // const post = { ...state.mainPosts[postIndex] };
+        // post.Comments = [dummyComment(action.data.content), ...post.Comments];
+        // const mainPosts = [...state.mainPosts];
+        // mainPosts[postIndex] = post;
+        // return {
+        //   ...state,
+        //   mainPosts,
+        //   addCommentLoading: false,
+        //   addCommentDone: true,
+        // };
+        const post = draft.mainPosts.find((v) => v.id === action.data.postId);
+        post.Comments.unshift(dummyComment(action.data.content));
+        draft.addCommentLoading = false;
+        draft.addCommentDone = true;
+        break;
+      }
+
+      case ADD_COMMENT_FAILURE:
+        draft.addCommentLoading = false;
+        draft.addCommentError = action.error;
+        break;
+      default:
+        break;
+    }
+  });
 };

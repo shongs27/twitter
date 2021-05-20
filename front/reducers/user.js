@@ -1,3 +1,6 @@
+import produce from "../util/produce";
+//immer 적용해보기
+
 const initialState = {
   logInLoading: false, //로그인 시도중
   logInDone: false,
