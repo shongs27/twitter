@@ -21,21 +21,22 @@ const initialState = {
           src: "https://gimg.gilbut.co.kr/book/BN001998/rn_view_BN001998.jpg",
         },
       ],
-      Comments: [{
-        id: shortId.generate(),
+      Comments: [
         {
+          id: shortId.generate(),
           User: {
             nickname: "nero",
           },
           content: "우와 개정판이 나왔군요~",
         },
         {
+          id: shortId.generate(),
           User: {
             nickname: "hero",
           },
           content: "얼른 사고싶어요~",
-        }
-     }],
+        },
+      ],
     },
   ],
   imagePaths: [],
@@ -113,7 +114,7 @@ export default (state = initialState, action) => {
 
       case ADD_POST_FAILURE:
         draft.addPostLoading = false;
-        draft.addPostError = action.error;        
+        draft.addPostError = action.error;
         break;
       case REMOVE_POST_REQUEST:
         draft.removePostLoading = true;
@@ -121,17 +122,16 @@ export default (state = initialState, action) => {
         draft.removePostError = null;
         break;
 
-     
       case REMOVE_POST_SUCCESS:
         draft.mainPosts = draft.mainPosts.filter((v) => v.id !== action.data);
         draft.removePostLoading = false;
         draft.removePostDone = true;
         break;
-       
+
       case REMOVE_POST_FAILURE:
         draft.removePostLoading = false;
         draft.removePostError = action.error;
-       
+
       case ADD_COMMENT_REQUEST:
         draft.addCommentLoading = true;
         draft.addCommentDone = false;

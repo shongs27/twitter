@@ -9,7 +9,6 @@ import {
   RetweetOutlined,
 } from "@ant-design/icons";
 import PropTypes from "prop-types";
-import { useSelector } from "react-redux";
 import PostImages from "./PostImages";
 import CommentForm from "./CommentForm";
 import PostCardContent from "./PostCardContent";

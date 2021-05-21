@@ -1,4 +1,4 @@
-import produce from "../util/produce";
+import produce from "immer";
 //immer 적용해보기
 
 const initialState = {
@@ -61,7 +61,7 @@ export const UNFOLLOW_SUCCESS = "UNFOLLOW_SUCCESS";
 export const UNFOLLOW_FAILURE = "UNFOLLOW_FAILURE";
 
 export const ADD_POST_TO_ME = "ADD_POST_TO_ME";
-export const REMOVE_POST_TO_ME = "REMOVE_POST_TO_ME";
+export const REMOVE_POST_OF_ME = "REMOVE_POST_OF_ME";
 
 ////// LOGIN 액션
 

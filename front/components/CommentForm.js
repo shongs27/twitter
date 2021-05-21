@@ -1,32 +1,33 @@
-import React, { useCallback } from "react";
-import { Form, Input, Button } from "antd";
-import PropTypes from "prop-types";
-import { useDispatch, useSelector } from "react-redux";
-import useInput from "../hooks/useInput";
+import React, { useCallback, useEffect } from 'react';
+import { Form, Input, Button } from 'antd';
+import PropTypes from 'prop-types';
+import { useDispatch, useSelector } from 'react-redux';
+import useInput from '../hooks/useInput';
 
 function CommentForm({ post }) {
   const dispatch = useDispatch();
   const id = useSelector((state) => state.user.me?.id);
   const { addCommentDone, addCommentLoading } = useSelector(
-    (state) => state.post
+    (state) => state.post,
   );
 
-  const [commentText, setChangeCommentText, setCommentText] = useInput("");
+  const [commentText, setChangeCommentText, setCommentText] = useInput('');
 
   useEffect(() => {
-    if (addCommentDone) setCommentText("");
+    if (addCommentDone) setCommentText('');
   }, [addCommentDone]);
 
   const onSubmitComment = useCallback(() => {
     dispatch({
       type: ADD_COMMENT_REQUEST,
+
       data: { content: commentText, postId: post.id, userId: id },
     });
   }, [commentText, id]);
 
   return (
     <Form onFinish={onSubmitComment}>
-      <Form.Item style={{ position: "relative", margin: 0 }}>
+      <Form.Item style={{ position: 'relative', margin: 0 }}>
         <Input.TextArea
           value={commentText}
           onChange={setChangeCommentText}
@@ -34,7 +35,7 @@ function CommentForm({ post }) {
         />
         <Button
           style={{
-            position: "absolute",
+            position: 'absolute',
             right: 0,
             bottom: -40,
             // zindex할 정도로 button이 뒤에 있는가?

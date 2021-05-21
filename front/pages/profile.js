@@ -1,10 +1,11 @@
-import React from "react";
-import Head from "next/head";
-import AppLayout from "../components/AppLayout";
-import NicknameEditForm from "../components/NicknameEditForm";
+import React from 'react';
+// eslint-disable-next-line no-unused-vars
+import Head from 'next/head';
+import { useSelector } from 'react-redux';
+import AppLayout from '../components/AppLayout';
+import NicknameEditForm from '../components/NicknameEditForm';
 import FollowList from '../components/FollowList';
 import FollowerList from '../components/FollowerList';
-import { useSelector } from 'react-redux';
 
 function profile() {
   //더미 데이터
@@ -32,6 +33,5 @@ function profile() {
     </>
   );
 }
-
 
 export default profile;

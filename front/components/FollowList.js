@@ -1,7 +1,7 @@
-import React from "react";
-import { Card, List, Button } from "antd";
-import { StopOutlined } from "@ant-design/icons";
-import PropTypes from "prop-types";
+import React from 'react';
+import { Card, List, Button } from 'antd';
+import { StopOutlined } from '@ant-design/icons';
+import PropTypes from 'prop-types';
 
 function FollowList({ header, data }) {
   return (
@@ -12,7 +12,7 @@ function FollowList({ header, data }) {
       size="small"
       header={<div>{header}</div>}
       loadMore={
-        <div style={{ textAlign: "center", margin: "10px 0" }}>
+        <div style={{ textAlign: 'center', margin: '10px 0' }}>
           <Button>더보기</Button>
         </div>
       }
