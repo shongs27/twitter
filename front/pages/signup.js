@@ -1,23 +1,23 @@
-import React, { useCallback, useState } from "react";
-import { Form, Input, Checkbox, Button } from "antd";
-import PropTypes from "prop-types";
-import styled from "styled-components";
-import useInput from "../hooks/useInput";
-import AppLayout from "../components/AppLayout";
-import LoginForm from "../components/LoginForm";
+import React, { useCallback, useState } from 'react';
+import { Form, Input, Checkbox, Button } from 'antd';
+import PropTypes from 'prop-types';
+import styled from 'styled-components';
+import useInput from '../hooks/useInput';
+import AppLayout from '../components/AppLayout';
+import LoginForm from '../components/LoginForm';
 
 const ErrorMessage = styled.div`
-  color: "red";
+  color: 'red';
 `;
 
 function Signup({ setIsLoggedIn }) {
   // 1 - CustomHook
-  const [email, onChangeEmail] = useInput("");
-  const [Nickname, onChangeNickname] = useInput("");
-  const [Password, onChangePassword] = useInput("");
+  const [email, onChangeEmail] = useInput('');
+  const [Nickname, onChangeNickname] = useInput('');
+  const [Password, onChangePassword] = useInput('');
 
   // 2 - 일일히 만들기
-  const [PasswordCheck, setPasswordCheck] = useState("");
+  const [PasswordCheck, setPasswordCheck] = useState('');
   const [PasswordError, setPasswordError] = useState(false);
 
   const onChangePasswordCheck = useCallback(
@@ -25,14 +25,13 @@ function Signup({ setIsLoggedIn }) {
       setPasswordCheck(e.target.value);
       setPasswordError(e.target.value !== Password);
     },
-    [Password]
+    [Password],
   );
 
   const [Term, setTerm] = useState(false);
 
   const [TermError, setTermError] = useState(false);
   const onChangeTerm = useCallback((e) => {
-    console.log(e.target.checked);
     setTerm(e.target.checked);
     setTermError(false);
   }, []);
@@ -45,8 +44,7 @@ function Signup({ setIsLoggedIn }) {
       return setTermError(true);
     }
     console.log(email, Nickname, Password);
-    dispatch
-    
+    // dispatch;
   }, [email, Password, PasswordCheck, Term]);
   // 3 - 폼 라이브러리 이용하기
   return (
@@ -56,7 +54,12 @@ function Signup({ setIsLoggedIn }) {
           <div>
             <label htmlFor="user-id">아이디</label>
             <br />
-            <Input name="user-id" value={email} required onChange={onChangeEmail} />
+            <Input
+              name="user-id"
+              value={email}
+              required
+              onChange={onChangeEmail}
+            />
           </div>
           <div>
             <label htmlFor="user-nick">닉네임</label>
@@ -98,10 +101,9 @@ function Signup({ setIsLoggedIn }) {
             {TermError && <ErrorMessage>약관에 동의하셔야 합니다</ErrorMessage>}
           </div>
           <div style={{ marginTop: 10 }}>
-            <Button type="primary" htmlType="submit">              
-              가입하기              
+            <Button type="primary" htmlType="submit">
+              가입하기
             </Button>
-
           </div>
         </Form>
       </AppLayout>
