@@ -13,16 +13,16 @@
     "node": true,
     "es6": true
   },
+  // "plugins": ["import", "react-hooks", "jsx-a11y"],
   "extends": [
-    //약한 recomended들
+    //약한 기본 recommended와 plugin의 recomended
     // "eslint:recommended",
     // "plugin:react/recommended"
 
-    //강한 airbnb
+    //강한 airbnb config
     "airbnb",
     "prettier"
   ],
-  // "plugins": ["import", "react-hooks"],
   "rules": {
     // "jsx-a11y/label-has-associated-control": "off",
     // "jsx-a11y/anchor-is-valid": "off",
@@ -33,7 +33,7 @@
     // "react/jsx-one-expression-per-line": "off",
     // "object-curly-newline": "off",
     // "linebreak-style": "off",
-    // "no-param-reassign": "off",
+    "no-param-reassign": "off",
     "spaced-comment": "off",
     "react/forbid-prop-types": 0
     // "react/no-array-index-key": "off"

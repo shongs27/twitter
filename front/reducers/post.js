@@ -1,5 +1,5 @@
-import shortId from "shortid";
-import produce from "immer";
+import shortId from 'shortid';
+import produce from 'immer';
 
 const initialState = {
   mainPosts: [
@@ -7,34 +7,34 @@ const initialState = {
       id: 1,
       User: {
         id: 1,
-        nickname: "제로초",
+        nickname: '제로초',
       },
-      content: "첫 번째 게시글",
+      content: '첫 번째 게시글 #해시태그 #익스프레스',
       Images: [
         {
-          src: "https://bookthumb-phinf.pstatic.net/cover/137/995/13799585.jpg?udate=20180726",
+          src: 'https://bookthumb-phinf.pstatic.net/cover/137/995/13799585.jpg?udate=20180726',
         },
         {
-          src: "https://gimg.gilbut.co.kr/book/BN001958/rn_view_BN001958.jpg",
+          src: 'https://gimg.gilbut.co.kr/book/BN001958/rn_view_BN001958.jpg',
         },
         {
-          src: "https://gimg.gilbut.co.kr/book/BN001998/rn_view_BN001998.jpg",
+          src: 'https://gimg.gilbut.co.kr/book/BN001998/rn_view_BN001998.jpg',
         },
       ],
       Comments: [
         {
           id: shortId.generate(),
           User: {
-            nickname: "nero",
+            nickname: 'nero',
           },
-          content: "우와 개정판이 나왔군요~",
+          content: '우와 개정판이 나왔군요~',
         },
         {
           id: shortId.generate(),
           User: {
-            nickname: "hero",
+            nickname: 'hero',
           },
-          content: "얼른 사고싶어요~",
+          content: '얼른 사고싶어요~',
         },
       ],
     },
@@ -51,21 +51,21 @@ const initialState = {
   addCommentError: null,
 };
 
-export const ADD_POST_REQUEST = "ADD_POST_REQUEST";
-export const ADD_POST_SUCCESS = "ADD_POST_SUCCESS";
-export const ADD_POST_FAILURE = "ADD_POST_FAILURE";
+export const ADD_POST_REQUEST = 'ADD_POST_REQUEST';
+export const ADD_POST_SUCCESS = 'ADD_POST_SUCCESS';
+export const ADD_POST_FAILURE = 'ADD_POST_FAILURE';
 
-export const REMOVE_POST_REQUEST = "REMOVE_POST_REQUEST";
-export const REMOVE_POST_SUCCESS = "REMOVE_POST_SUCCESS";
-export const REMOVE_POST_FAILURE = "REMOVE_POST_FAILURE";
+export const REMOVE_POST_REQUEST = 'REMOVE_POST_REQUEST';
+export const REMOVE_POST_SUCCESS = 'REMOVE_POST_SUCCESS';
+export const REMOVE_POST_FAILURE = 'REMOVE_POST_FAILURE';
 
-export const ADD_COMMENT_REQUEST = "ADD_COMMENT_REQUEST";
-export const ADD_COMMENT_SUCCESS = "ADD_COMMENT_SUCCESS";
-export const ADD_COMMENT_FAILURE = "ADD_COMMENT_FAILURE";
+export const ADD_COMMENT_REQUEST = 'ADD_COMMENT_REQUEST';
+export const ADD_COMMENT_SUCCESS = 'ADD_COMMENT_SUCCESS';
+export const ADD_COMMENT_FAILURE = 'ADD_COMMENT_FAILURE';
 
 export const addPost = (data) => ({
   type: ADD_POST_REQUEST,
-  data: action.data,
+  data,
 });
 
 export const addComment = (data) => ({
@@ -79,9 +79,8 @@ const dummyPost = (data) => ({
   content: data.content,
   User: {
     id: 1,
-    nickname: "제로초",
+    nickname: '제로초',
   },
-  content: "더미데이터입니다",
   Images: [],
   Comments: [],
 });
@@ -91,13 +90,13 @@ const dummyComment = (data) => ({
   content: data,
   User: {
     id: 1,
-    nickname: "제로초",
+    nickname: '제로초',
   },
 });
 
-// (이전상태, 액션) => 다음상태 (불변성 지켜가면서)
-export default (state = initialState, action) => {
-  return produce(state, (draft) => {
+// (이전상태, 액션) => 다음상태로 만드는게 reducer (불변성 지켜가면서)
+export default (state = initialState, action) =>
+  produce(state, (draft) => {
     switch (action.type) {
       case ADD_POST_REQUEST:
         draft.addPostLoading = true;
@@ -131,6 +130,7 @@ export default (state = initialState, action) => {
       case REMOVE_POST_FAILURE:
         draft.removePostLoading = false;
         draft.removePostError = action.error;
+        break;
 
       case ADD_COMMENT_REQUEST:
         draft.addCommentLoading = true;
@@ -167,4 +167,3 @@ export default (state = initialState, action) => {
         break;
     }
   });
-};

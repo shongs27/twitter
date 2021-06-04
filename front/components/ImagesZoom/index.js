@@ -1,6 +1,6 @@
-import React, { useState } from "react";
-import Slick from "react-slick";
-import propTypes from "prop-types";
+import React, { useState } from 'react';
+import Slick from 'react-slick';
+import propTypes from 'prop-types';
 
 import {
   Overlay,
@@ -10,7 +10,7 @@ import {
   ImgWrapper,
   Indicator,
   SlickWrapper,
-} from "./styles";
+} from './styles';
 
 function ImagesZoom({ images, onClose }) {
   const [currentSlide, setCurrentSlide] = useState(0);

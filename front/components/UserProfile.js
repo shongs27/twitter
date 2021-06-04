@@ -1,8 +1,8 @@
-import React, { useCallback } from "react";
-import { Card, Avatar, Button } from "antd";
-import { useDispatch, useSelector } from "react-redux";
+import React, { useCallback } from 'react';
+import { Card, Avatar, Button } from 'antd';
+import { useDispatch, useSelector } from 'react-redux';
 
-import { logoutRequestAction } from "../reducers/user";
+import { logoutRequestAction } from '../reducers/user';
 
 //트위터 게시글 Card로 하면 좋을 거 같다
 function UserProfile() {

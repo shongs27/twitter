@@ -137,7 +137,7 @@ Hook을 쓸 수 있는 조건
   axios.get('/data')
   .then(() => {
   setState(data);
-  })
+  }) ad
   .catch(() => {
   setError(error);
   })
@@ -171,3 +171,6 @@ data: name
 )
 
 뭐냐 HYDRATE
+
+shortId
+불변성유지를 위한 Immer
