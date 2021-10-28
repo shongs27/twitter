@@ -1,7 +1,6 @@
 import produce from 'immer';
-//immer 적용해보기
 
-const initialState = {
+export const initialState = {
   logInLoading: false, //로그인 시도중
   logInDone: false,
   logInError: null,
@@ -20,21 +19,19 @@ const initialState = {
 };
 
 //redux-thunk
-export const loginAction = (data) => {
-  return (dispatch, getState) => {
-    //initial State인 getState();
-    const state = getState();
-    dispatch(loginRequestAction());
-    axios
-      .post('/api/login')
-      .then((res) => {
-        dispatch(loginSuccessAction(res.data));
-      })
-      .catch((err) => {
-        dispatch(loginFailureAction(err));
-      });
-  };
-};
+// export const loginAction = (data) => (dispatch, getState) => {
+//   //initial State를 getState();
+//   const state = getState();
+//   dispatch(loginRequestAction());
+//   axios
+//     .post('/api/login')
+//     .then((res) => {
+//       dispatch(loginSuccessAction(res.data));
+//     })
+//     .catch((err) => {
+//       dispatch(loginFailureAction(err));
+//     });
+// };
 
 export const LOG_IN_REQUEST = 'LOG_IN_REQUEST';
 export const LOG_IN_SUCCESS = 'LOG_IN_SUCCESS';
@@ -64,7 +61,6 @@ export const ADD_POST_TO_ME = 'ADD_POST_TO_ME';
 export const REMOVE_POST_OF_ME = 'REMOVE_POST_OF_ME';
 
 ////// LOGIN 액션
-
 export const loginRequestAction = (data) => {
   return {
     type: LOG_IN_REQUEST,
@@ -72,21 +68,21 @@ export const loginRequestAction = (data) => {
   };
 };
 
-export const loginSuccessAction = (data) => {
-  return {
-    type: LOG_IN_SUCCESS,
-    data,
-  };
-};
+// saga가 액션 만들어주므로 필요 없다
+// export const loginSuccessAction = (data) => {
+//   return {
+//     type: LOG_IN_SUCCESS,
+//     data,
+//   };
+// };
+// export const loginFailureAction = (data) => {
+//   return {
+//     type: LOG_IN_FAILURE,
+//     data,
+//   };
+// };
 
-export const loginFailureAction = (data) => {
-  return {
-    type: LOG_IN_FAILURE,
-    data,
-  };
-};
-
-////// LOGOUT 액션
+// ////// LOGOUT 액션
 
 export const logoutRequestAction = () => {
   return {
@@ -94,18 +90,19 @@ export const logoutRequestAction = () => {
   };
 };
 
-export const logoutSuccessAction = () => {
-  return {
-    type: LOG_OUT_SUCCESS,
-  };
-};
+// export const logoutSuccessAction = () => {
+//   return {
+//     type: LOG_OUT_SUCCESS,
+//   };
+// };
 
-export const logoutFailureAction = () => {
-  return {
-    type: LOG_OUT_FAILURE,
-  };
-};
+// export const logoutFailureAction = () => {
+//   return {
+//     type: LOG_OUT_FAILURE,
+//   };
+// };
 
+//reducer
 // (이전상태, 액션) => 다음상태
 export default (state = initialState, action) => {
   switch (action.type) {

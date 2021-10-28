@@ -5,8 +5,8 @@ import {
   fork,
   takeEvery,
   takeLatest,
-} from "redux-saga/effects";
-import axios from "axios";
+} from 'redux-saga/effects';
+import axios from 'axios';
 import {
   LOG_IN_FAILURE,
   LOG_IN_REQUEST,
@@ -17,10 +17,10 @@ import {
   SIGN_UP_REQUEST,
   SIGN_UP_FAILURE,
   SIGN_UP_SUCCESS,
-} from "../reducers/user";
+} from '../reducers/user';
 
 function logInAPI() {
-  return axios.post("/api/login");
+  return axios.post('/api/login');
 }
 
 function* logIn(action) {
@@ -42,7 +42,7 @@ function* logIn(action) {
 }
 
 function logOutAPI() {
-  return axios.post("/api/logout");
+  return axios.post('/api/logout');
 }
 
 function* logOut() {
@@ -76,22 +76,20 @@ function* signUp() {
 }
 
 function* watchLogIn() {
-  //while take를 통해 동기적 동작
+  //1. while take를 통해 동기적 동작
   // while (true) {
   //   yield take("LOG_IN_REQUEST", logIn);
   // }
-  //takeEvery를 통해 비동기적 동작
+
+  //2. takeEvery를 통해 비동기적 동작
   yield takeEvery(LOG_IN_REQUEST, logIn);
 }
 
 function* watchLogOut() {
-  // while (true) {
-  //   yield take("LOG_OUT_REQUEST");
-  // }
   yield takeLatest(LOG_OUT_REQUEST, logOut);
 }
 
-function * watchSignUp() {
+function* watchSignUp() {
   yield takeEvery(SIGN_UP_REQUEST, signUp);
 }
 

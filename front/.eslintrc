@@ -15,11 +15,11 @@
   },
   // "plugins": ["import", "react-hooks", "jsx-a11y"],
   "extends": [
-    //약한 기본 recommended와 plugin의 recomended
+    //recommended는 약하다
     // "eslint:recommended",
     // "plugin:react/recommended"
 
-    //강한 airbnb config
+    //airbnb는 강하다
     "airbnb",
     "prettier"
   ],
@@ -35,7 +35,8 @@
     // "linebreak-style": "off",
     "no-param-reassign": "off",
     "spaced-comment": "off",
-    "react/forbid-prop-types": 0
+    "react/forbid-prop-types": 0,
+    "arrow-body-style": "off"
     // "react/no-array-index-key": "off"
   }
 }
