@@ -1,22 +1,23 @@
-import React, { useCallback, useState } from "react";
-import { Card, Popover, Button, Avatar, List, Comment } from "antd";
-import ButtonGroup from "antd/lib/button/button-group";
+import React, { useCallback, useState } from 'react';
+import { Card, Popover, Button, Avatar, List, Comment } from 'antd';
+import ButtonGroup from 'antd/lib/button/button-group';
 import {
   EllipsisOutlined,
   HeartOutlined,
   HeartTwoTone,
   MessageOutlined,
   RetweetOutlined,
-} from "@ant-design/icons";
-import PropTypes from "prop-types";
-import PostImages from "./PostImages";
-import CommentForm from "./CommentForm";
-import PostCardContent from "./PostCardContent";
+} from '@ant-design/icons';
+import { useSelector, useDispatch } from 'react-redux';
+import PropTypes from 'prop-types';
+import PostImages from './PostImages';
+import CommentForm from './CommentForm';
+import PostCardContent from './PostCardContent';
 
-import { useSelector, useDispatch } from "react-redux";
-import { REMOVE_POST_REQUEST } from "../reducers/post";
+import { REMOVE_POST_REQUEST } from '../reducers/post';
 
 function PostCard({ post }) {
+  const dispatch = useDispatch();
   const id = useSelector((state) => state.user.me?.id);
   const [liked, setLiked] = useState(false);
   const [commentFormOpened, setCommentFormOpened] = useState(false);
@@ -30,14 +31,14 @@ function PostCard({ post }) {
   const { removePostLoading } = useSelector((state) => state.post);
 
   const onRemovePost = useCallback(() => {
-    dispatchEvent({
+    dispatch({
       type: REMOVE_POST_REQUEST,
       data: post.id,
     });
   }, []);
 
   return (
-    <div style={{ marginBottom: "20px" }}>
+    <div style={{ marginBottom: '20px' }}>
       <Card
         cover={post.Images[0] && <PostImages images={post.Images} />}
         actions={[
@@ -113,11 +114,12 @@ PostCard.propTypes = {
   post: PropTypes.shape({
     id: PropTypes.number,
     User: PropTypes.object,
+    UserId: PropTypes.number,
     content: PropTypes.string,
     createdAt: PropTypes.object,
     Comments: PropTypes.arrayOf(PropTypes.any),
     Images: PropTypes.arrayOf(PropTypes.any),
-  }),
+  }).isRequired,
 };
 
 export default PostCard;

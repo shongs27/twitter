@@ -21,6 +21,8 @@ import {
   REMOVE_POST_FAILURE,
 } from '../reducers/post';
 
+import { ADD_POST_TO_ME, REMOVE_POST_OF_ME } from '../reducers/user';
+
 function addPostAPI(data) {
   return axios.post('/api/post', data);
 }
@@ -38,7 +40,7 @@ function* addPost(action) {
       },
     });
     yield put({
-      type: ADD_POST_,
+      type: ADD_POST_TO_ME,
       data: id,
     });
   } catch (err) {
@@ -61,6 +63,10 @@ function* removePost(action) {
       type: REMOVE_POST_SUCCESS,
       data: action.data,
     });
+    yield put({
+      type: REMOVE_POST_OF_ME,
+      data: action.data,
+    });
   } catch (err) {
     yield put({
       type: REMOVE_POST_FAILURE,
@@ -76,6 +82,7 @@ function* addComment(action) {
     yield delay(1000);
     yield put({
       type: ADD_COMMENT_SUCCESS,
+      data: action.data,
     });
   } catch (err) {
     yield put({
@@ -109,7 +116,7 @@ function* watchRemovePost() {
 function* watchAddComment() {
   // 2초안에 addComment는 한번만 실행 될 수 있다
   // 요청자체를 한번만 보낼 수 있게 한다
-  yield throttle(ADD_COMMENT_REQUEST, addComment, 2000);
+  yield throttle(1000, ADD_COMMENT_REQUEST, addComment);
 }
 
 export default function* postSaga() {

@@ -1,12 +1,12 @@
-import React, { useState, useCallback } from "react";
-import { Form, Input, Button } from "antd";
-import Link from "next/link";
-import { useDispatch, useSelector } from "react-redux";
+import React, { useState, useCallback } from 'react';
+import { Form, Input, Button } from 'antd';
+import Link from 'next/link';
+import { useDispatch, useSelector } from 'react-redux';
 // styled-component를 쓰는 이유
 // CSS inline에서 {} !== {} 로 인해 리렌더링
-import styled from "styled-components";
-import useInput from "../hooks/useInput";
-import { loginRequestAction } from "../reducers/user";
+import styled from 'styled-components';
+import useInput from '../hooks/useInput';
+import { loginRequestAction } from '../reducers/user';
 
 const ButtonWrapper = styled.div`
   margin-top: 20px;
@@ -21,15 +21,14 @@ function LoginForm() {
   const dispatch = useDispatch();
 
   //1방법. CustomHook - 지저분한 Form으로 인한 상태, 함수를 일시에 정리할 수 있다
-  const [email, onChangeEmail] = useInput("");
+  const [email, onChangeEmail] = useInput('');
   //2방법. 컴포넌트에 props로 넘겨주는 함수는 useCallback을 꼭 써줘야 최적화가 된다
-  const [Password, setPassword] = useState("");
+  const [Password, setPassword] = useState('');
 
   const onChangePassword = useCallback((e) => {
     setPassword(e.target.value);
   }, []);
   const onSubmitForm = useCallback(() => {
-    console.log(email, Password);
     dispatch(loginRequestAction({ email, Password }));
   }, [email, Password]);
 

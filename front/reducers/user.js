@@ -60,6 +60,23 @@ export const UNFOLLOW_FAILURE = 'UNFOLLOW_FAILURE';
 export const ADD_POST_TO_ME = 'ADD_POST_TO_ME';
 export const REMOVE_POST_OF_ME = 'REMOVE_POST_OF_ME';
 
+const dummyUser = (data) => ({
+  ...data,
+  nickname: '제로초',
+  id: 1,
+  Posts: [{ id: 1 }],
+  Followings: [
+    { nickname: '부기초' },
+    { nickname: '김재호' },
+    { nickname: '알던팍' },
+  ],
+  Followers: [
+    { nickname: '부기초' },
+    { nickname: '김재호' },
+    { nickname: '알던팍' },
+  ],
+});
+
 ////// LOGIN 액션
 export const loginRequestAction = (data) => {
   return {
@@ -118,14 +135,7 @@ export default (state = initialState, action) => {
         ...state,
         logInLoading: false,
         logInDone: true,
-        me: {
-          ...action.data,
-          nickname: 'zerocho',
-          id: 1,
-          Posts: [],
-          Followings: [],
-          Followers: [],
-        },
+        me: dummyUser(action.data),
       };
     case LOG_IN_FAILURE:
       return {

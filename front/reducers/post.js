@@ -12,12 +12,15 @@ const initialState = {
       content: '첫 번째 게시글 #해시태그 #익스프레스',
       Images: [
         {
+          id: shortId.generate(),
           src: 'https://bookthumb-phinf.pstatic.net/cover/137/995/13799585.jpg?udate=20180726',
         },
         {
+          id: shortId.generate(),
           src: 'https://gimg.gilbut.co.kr/book/BN001958/rn_view_BN001958.jpg',
         },
         {
+          id: shortId.generate(),
           src: 'https://gimg.gilbut.co.kr/book/BN001998/rn_view_BN001998.jpg',
         },
       ],
@@ -68,9 +71,9 @@ export const addPost = (data) => ({
   data,
 });
 
-export const addComment = (data) => ({
+export const addComment = (commentText, postId, userId) => ({
   type: ADD_COMMENT_REQUEST,
-  data,
+  data: { content: commentText, postId, userId },
 });
 
 const dummyPost = (data) => ({
@@ -87,10 +90,10 @@ const dummyPost = (data) => ({
 
 const dummyComment = (data) => ({
   id: shortId.generate(),
-  content: data,
+  content: data.content,
   User: {
-    id: 1,
-    nickname: '제로초',
+    id: data.userId,
+    nickname: data.userId,
   },
 });
 
@@ -103,14 +106,12 @@ export default (state = initialState, action) =>
         draft.addPostDone = false;
         draft.addPostError = null;
         break;
-
       case ADD_POST_SUCCESS:
-        //앞에다가 새로운 dummyPost를 추가해야 새게시글이 위로 올라가게 보여줄수 있다
+        //앞에다가 새로운 dummyPost를 추가해야 새 게시글이 위로 올라가게 보여줄수 있다
         draft.mainPosts.unshift(dummyPost(action.data));
         draft.addPostLoading = false;
         draft.addPostDone = true;
         break;
-
       case ADD_POST_FAILURE:
         draft.addPostLoading = false;
         draft.addPostError = action.error;
@@ -153,7 +154,7 @@ export default (state = initialState, action) =>
         //   addCommentDone: true,
         // };
         const post = draft.mainPosts.find((v) => v.id === action.data.postId);
-        post.Comments.unshift(dummyComment(action.data.content));
+        post.Comments.unshift(dummyComment(action.data));
         draft.addCommentLoading = false;
         draft.addCommentDone = true;
         break;
@@ -163,6 +164,7 @@ export default (state = initialState, action) =>
         draft.addCommentLoading = false;
         draft.addCommentError = action.error;
         break;
+
       default:
         break;
     }
