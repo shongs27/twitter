@@ -15,6 +15,7 @@ import CommentForm from './CommentForm';
 import PostCardContent from './PostCardContent';
 
 import { REMOVE_POST_REQUEST } from '../reducers/post';
+import FollowButton from './FollowButton';
 
 function PostCard({ post }) {
   const dispatch = useDispatch();
@@ -41,6 +42,7 @@ function PostCard({ post }) {
     <div style={{ marginBottom: '20px' }}>
       <Card
         cover={post.Images[0] && <PostImages images={post.Images} />}
+        extra={id && <FollowButton post={post}>팔로우</FollowButton>}
         actions={[
           <RetweetOutlined key="retweet" />,
           liked ? (

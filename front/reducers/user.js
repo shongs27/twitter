@@ -1,6 +1,12 @@
 import produce from 'immer';
 
 export const initialState = {
+  followLoading: false, //로그인 시도중
+  followDone: false,
+  followError: null,
+  unfollowLoading: false, //로그인 시도중
+  unfollowDone: false,
+  unfollowError: null,
   logInLoading: false, //로그인 시도중
   logInDone: false,
   logInError: null,
@@ -123,6 +129,54 @@ export const logoutRequestAction = () => {
 // (이전상태, 액션) => 다음상태
 export default (state = initialState, action) => {
   switch (action.type) {
+    case FOLLOW_REQUEST:
+      return {
+        ...state,
+        followLoading: true,
+        followError: null,
+        followDone: false,
+      };
+    case FOLLOW_SUCCESS:
+      return {
+        ...state,
+        followLoading: false,
+        followDone: true,
+        me: {
+          ...state.me,
+          Followings: [{ id: action.data }, ...state.me.Followings],
+        },
+      };
+    case FOLLOW_FAILURE:
+      return {
+        ...state,
+        followLoading: false,
+        followError: action.error,
+      };
+    case UNFOLLOW_REQUEST:
+      return {
+        ...state,
+        unfollowLoading: true,
+        unfollowError: null,
+        unfollowDone: false,
+      };
+    case UNFOLLOW_SUCCESS: {
+      const test = state.me.Followings.filter((v) => v.id !== action.data);
+      return {
+        ...state,
+        unfollowLoading: false,
+        unfollowDone: true,
+        me: {
+          ...state.me,
+          Followings: test,
+        },
+      };
+    }
+    case UNFOLLOW_FAILURE:
+      return {
+        ...state,
+        unfollowLoading: false,
+        unfollowError: action.error,
+      };
     case LOG_IN_REQUEST:
       return {
         ...state,

@@ -1,5 +1,6 @@
 import shortId from 'shortid';
 import produce from 'immer';
+import faker from 'faker';
 
 const initialState = {
   mainPosts: [
@@ -53,6 +54,58 @@ const initialState = {
   addCommentDone: false,
   addCommentError: null,
 };
+
+// initialState.mainPosts.push(
+//   Array(5)
+//     .fill()
+//     .map(() => ({
+//       id: shortId.generate(),
+//       User: {
+//         id: shortId.generate(),
+//         nickname: faker.name.findName(),
+//       },
+//       content: faker.lorem.paragraph(),
+//       Images: [
+//         {
+//           id: shortId.generate(),
+//           src: faker.image.imageUrl(),
+//         },
+//       ],
+//       Comments: [
+//         {
+//           User: {
+//             id: shortId.generate(),
+//             nickname: faker.name.findName(),
+//           },
+//           content: faker.lorem.sentence(),
+//         },
+//       ],
+//     })),
+// );
+
+initialState.mainPosts.push({
+  id: shortId.generate(),
+  User: {
+    id: shortId.generate(),
+    nickname: faker.name.findName(),
+  },
+  content: faker.lorem.paragraph(),
+  Images: [
+    {
+      id: shortId.generate(),
+      src: faker.image.imageUrl(),
+    },
+  ],
+  Comments: [
+    {
+      User: {
+        id: shortId.generate(),
+        nickname: faker.name.findName(),
+      },
+      content: faker.lorem.sentence(),
+    },
+  ],
+});
 
 export const ADD_POST_REQUEST = 'ADD_POST_REQUEST';
 export const ADD_POST_SUCCESS = 'ADD_POST_SUCCESS';

@@ -30,7 +30,7 @@ function FollowList({ header, data }) {
   );
 }
 
-FollowList.PropTypes = {
+FollowList.propTypes = {
   header: PropTypes.string.isRequired,
   data: PropTypes.array.isRequired,
 };
