@@ -1,8 +1,10 @@
 - styled.component가 적용 안되는 것은 서버사이드 렌더링 때문이다
 
-==============================================================================
+===
 
 # 복습
+
+# Front
 
 - inline style 리렌더링 문제
   객체의 불변성을 지켜주지 않으면 리렌더링으로 인한 효율성 문제가 발생하므로 심한 inline 스타일은 지양되어야 한다
@@ -29,6 +31,7 @@ dummydata - faker
 shortid - 중복되기 어려운 id 제공해줌
 immer - immutable보다 더 좋은 객체 불변성 유지하게 돕는 라이브러리
 use-immer - immer의 hook버전
+redux-toolkit - 리덕스 로직을 간단하게 작성하는 표준방식
 
 ## Eslint
 
@@ -93,8 +96,6 @@ Hook을 쓸 수 있는 조건
   참조값을 적절히 사용함으로써 ex) ...state
   메모리를 절약할 수 있다
 
-========
-
 # redux-saga 연동하기
 
 generator는 중단점이 있다
@@ -102,8 +103,67 @@ generator는 중단점이 있다
 
 thunk와의 차이는 '이펙트'에 있다
 throttle, takeLatest, takeLeading같은 것이 미리 구현되어 있다
+(셋 다 응답과 관련있지 요청 자체를 막지는 못한다)
 
 - 스로틀링 : 마지막 함수가 호출 된 후 일정 시간이 지나기 전에 다시 호출되지 않는것 (스크롤 움직이기)
   => 시작과 동시에 쿨타임
 - 디바운싱 : 연이어 호출되는 함수들 중 마지막 함수(또는 제일 처음)만 호출하도록 하는 것 (ajax 검색)
-  => 끝났나..?
+  => 끝났나..? 이제 보낸다?
+
+인피니트 스크롤
+-scroll 이벤트가 아니라 intersectionObserver를 참조
+-react virtualize - 인스타가 쓰는 방식
+
+프론트는 백을 만드는게 아니라
+수천개의 더미데이터를 읽으면서도 화면에 렉이 걸리지 않는 모습
+
+===
+
+# back
+
+## http
+
+노드는 런타임이고 노드에서 제공하는 http모듈이 서버인것이다
+
+http- createServer을 통해 서버를 만들어서 req url, method에 따라서 res 로 응답을 해준다
+요청과 응답을 1대1일이라서 res.end()는 한번만 쓸수 있는 것이네
+
+한글 지원안하네? 익스프레스는 지원함
+
+## express
+
+node http 보다 express 프레임워크가 코드를 구조적으로 깔끔하게 짤 수 있다 (createServer와 달리 쉽게 분리도 되니깐)
+
+const server = http.createServer((req,res) => {
+if(req.method === 'get') {
+if(req.url ==='//api/posts){
+// 뭐 이런식 인데 구조적으로 바뀌어서
+}
+}
+})
+
+app.get('/', (req,res) => {
+// 으로 깔끔하게 바뀐다
+})
+
+get -> 가져오다
+post -> 생성하다
+patch -> 부분수정
+delete -> 삭제
+put -> 전체수정
+options -> 찔러보기
+head -> 헤더만 가져오기 (헤더/본문)
+
+게시글 가져오면서 조회수 1올린다
+=> get을 써야하나 ? post를 써야하나?
+=> 백엔드개발자와 합의를 하면 된다
+=> 정확히 지킨다면 rest api를 지킨다는 것
+
+swagger - api문서를 뽑는 툴
+
+## import vs require
+
+노드는 es6의 모듈인 import를 지원하지만 기본적으로는 commonJS인 require을 쓴다
+webpack을 가지는 프론트는 import를 써도 require moudle.exports로 바꾸어준다
+노드에서는 webpack을 안쓰기 때문에 처음부터 require을 쓴다
+=> 노드쪽도 import export로 통일 될 것이다
