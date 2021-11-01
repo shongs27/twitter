@@ -1,8 +1,15 @@
 const express = require("express");
+const app = express();
 const postRouter = require("./routes/post");
 
-const app = express();
-
+//시퀄라이즈 가져오기
+const db = require("./models");
+db.sequelize
+  .sync()
+  .then(() => {
+    console.log("db 연결 성공");
+  })
+  .catch(console.error);
 app.get("/", (req, res) => {
   res.send("반갑습니다 get입니다");
 });
