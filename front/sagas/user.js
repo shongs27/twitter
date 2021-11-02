@@ -3,6 +3,7 @@ import {
   delay,
   put,
   fork,
+  call,
   takeEvery,
   takeLatest,
 } from 'redux-saga/effects';
@@ -65,15 +66,19 @@ function* logOut() {
     });
   }
 }
+const signUpAPI = (data) => {
+  return axios.post('http://localhost:8080/user', data);
+};
 
-function* signUp() {
+function* signUp(action) {
   try {
-    yield delay(1000);
-    // const result = yield call(logOutAPI);
+    const result = yield call(signUpAPI, action.data);
+    console.log('백엔드', result);
     yield put({
       type: SIGN_UP_SUCCESS,
     });
   } catch (err) {
+    console.error(err);
     yield put({
       type: SIGN_UP_FAILURE,
       error: err.response.data,

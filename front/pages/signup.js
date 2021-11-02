@@ -1,20 +1,28 @@
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { Form, Input, Checkbox, Button } from 'antd';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
-import useInput from '../hooks/useInput';
+import { useDispatch, useSelector } from 'react-redux';
+import Router from 'next/router';
 import AppLayout from '../components/AppLayout';
 import LoginForm from '../components/LoginForm';
+import { SIGN_UP_REQUEST } from '../reducers/user';
+import useInput from '../hooks/useInput';
 
 const ErrorMessage = styled.div`
   color: 'red';
 `;
 
-function Signup({ setIsLoggedIn }) {
+function Signup() {
+  const dispatch = useDispatch();
+  const { signUpLoading, signUpDone, signUpError } = useSelector(
+    (state) => state.user,
+  );
+
   // 1 - CustomHook
   const [email, onChangeEmail] = useInput('');
-  const [Nickname, onChangeNickname] = useInput('');
-  const [Password, onChangePassword] = useInput('');
+  const [nickname, onChangeNickname] = useInput('');
+  const [password, onChangePassword] = useInput('');
 
   // 2 - 일일히 만들기
   const [PasswordCheck, setPasswordCheck] = useState('');
@@ -23,9 +31,9 @@ function Signup({ setIsLoggedIn }) {
   const onChangePasswordCheck = useCallback(
     (e) => {
       setPasswordCheck(e.target.value);
-      setPasswordError(e.target.value !== Password);
+      setPasswordError(e.target.value !== password);
     },
-    [Password],
+    [password],
   );
 
   const [Term, setTerm] = useState(false);
@@ -37,22 +45,33 @@ function Signup({ setIsLoggedIn }) {
   }, []);
 
   const onSubmit = useCallback(() => {
-    if (Password !== PasswordCheck) {
+    if (password !== PasswordCheck) {
       return setPasswordError(true);
     }
     if (!Term) {
       return setTermError(true);
     }
-    console.log(email, Nickname, Password);
-    // dispatch;
-  }, [email, Password, PasswordCheck, Term]);
-  // 3 - 폼 라이브러리 이용하기
+    console.log(email, nickname, password);
+    dispatch({ type: SIGN_UP_REQUEST, data: { email, nickname, password } });
+  }, [email, password, PasswordCheck, Term]);
+
+  // useEffect(() => {
+  //   if (signUpDone) {
+  //     Router.push('/');
+  //   }
+  // }, [signUpDone]);
+
+  useEffect(() => {
+    if (signUpError) {
+      alert(signUpError);
+    }
+  }, [signUpError]);
   return (
     <>
       <AppLayout>
         <Form onFinish={onSubmit}>
           <div>
-            <label htmlFor="user-id">아이디</label>
+            <label htmlFor="user-email">이메일</label>
             <br />
             <Input
               name="user-id"
@@ -66,7 +85,7 @@ function Signup({ setIsLoggedIn }) {
             <br />
             <Input
               name="user-nickname"
-              value={Nickname}
+              value={nickname}
               required
               onChange={onChangeNickname}
             />
@@ -76,7 +95,7 @@ function Signup({ setIsLoggedIn }) {
             <br />
             <Input
               name="user-Password"
-              value={Password}
+              value={password}
               required
               onChange={onChangePassword}
             />

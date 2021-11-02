@@ -167,3 +167,43 @@ swagger - api문서를 뽑는 툴
 webpack을 가지는 프론트는 import를 써도 require moudle.exports로 바꾸어준다
 노드에서는 webpack을 안쓰기 때문에 처음부터 require을 쓴다
 => 노드쪽도 import export로 통일 될 것이다
+
+## MySql
+
+MySQL Server와 MySQL Workbench(명령프롬프트 없이 시각화)
+npm i sequelize sequelize-cli mysql2
+mysql2 - 노드와 mysql을 연결해주는 드라이버
+sequelize - 자바스크립트로 sql을 조작할 수 있게 해주는 라이브러리
+npx sequelize init - sequelize 세팅
+
+"host": "127.0.0.1",
+"port": "3306", 에 기본적으로 SQL이 세팅된다
+
+관계파악 중요 - 일대일관계, 다대다관계 등등
+다대다관계일때는 중간에 테이블이 생긴다(관계를 이어줌)
+through는 테이블 이름을 바꿔주고 foreignKey는 칼럼의 이름을 바꿔줬다고 생각하면 된다 (User-User 공통되니깐 헷갈려서)
+
+공식문서를 보고 비동기함수인지 아닌지 파악해야 한다
+
+응답은 한번만 보내야 한다
+res.send()
+res.send() --- (x)
+
+200 성공
+300 리다이렉트
+400 클라이언트 에러
+500 서버 에러
+
+CORS문제는 '브라우저'에서 다른 도메인으로 요청을 보낼때 발생하는 문제다
+브라우저가 막지만 허용은 서버가 한다?
+=> 백엔드 서버에 바로 정보를 탈취하는 해킹을 방지하기 위한 것으로 브라우저의 정책임
+
+예를 들어, 프론트서버(3060)에서 백엔드서버(3065)로 요청 보낼때는 오류가 안걸린다
+
+-해결책
+1.proxy방식
+서버간의 통신에는 cors문제가 발생하지 않는다
+브라우저(3060)에서 프론트서버(3060)으로 보내고 프론터서버(3060)에서 백엔드서버(3065)로 보낸다
+
+2. 직접 app.use((req,res,next) => res.setHeader())
+3. 역시 라이브러리 짱! cors()
