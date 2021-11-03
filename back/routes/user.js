@@ -30,4 +30,19 @@ router.post("/", async (req, res, next) => {
   }
 });
 
+router.post("/login", async (req, res, next) => {
+  try {
+    const exUser = await User.findOne({
+      where: {
+        email: req.body.email,
+      },
+    });
+
+    console.log("정체", exUser.dataValues.password);
+  } catch (error) {
+    console.error(error);
+    next(error);
+  }
+});
+
 module.exports = router;
