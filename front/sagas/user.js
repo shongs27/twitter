@@ -27,7 +27,7 @@ import {
 } from '../reducers/user';
 
 function logInAPI(data) {
-  return axios.post('http://localhost:8080/user/login', data);
+  return axios.post('/user/login', data);
 }
 
 function* logIn(action) {
@@ -35,12 +35,10 @@ function* logIn(action) {
     //fork 비동기실행 (요청보내고 바로 다음꺼 실행) - axios요청과 비슷 - 논블록킹
     //call 동기실행 (기다림) - await와 비슷 - 블록킹
     const result = yield call(logInAPI, action.data);
-    if (result) {
-      yield put({
-        type: LOG_IN_SUCCESS,
-        data: action.data,
-      });
-    } else throw new Error();
+    yield put({
+      type: LOG_IN_SUCCESS,
+      data: result.data,
+    });
   } catch (err) {
     yield put({
       type: LOG_IN_FAILURE,
@@ -50,7 +48,7 @@ function* logIn(action) {
 }
 
 function logOutAPI() {
-  return axios.post('/logout');
+  return axios.post('/user/logout');
 }
 
 function* logOut() {
@@ -68,7 +66,7 @@ function* logOut() {
   }
 }
 const signUpAPI = (data) => {
-  return axios.post('http://localhost:8080/user', data);
+  return axios.post('/user', data);
 };
 
 function* signUp(action) {

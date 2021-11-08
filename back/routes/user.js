@@ -2,6 +2,7 @@ const express = require("express");
 const router = express.Router();
 const { User } = require("../models");
 const bcrypt = require("bcrypt");
+const passport = require("passport");
 
 //User.create()는 비동기함수
 //비동기 순서 맞춰주기 위해서 (res.json()이 먼저 실행되면 안된다)
@@ -30,19 +31,39 @@ router.post("/", async (req, res, next) => {
   }
 });
 
-router.post("/login", async (req, res, next) => {
-  try {
-    const exUser = await User.findOne({
-      where: {
-        email: req.body.email,
-      },
-    });
+//미들웨어 확장
+//passport.authenticate가 미들웨어를 사용하기 위해 확장하는 방법
+router.post("/login", (req, res, next) => {
+  //passport/local.js 전략을 실행
+  passport.authenticate("local", (err, user, info) => {
+    //(err,user,info)는 done(서버에러, 성공, 클라이언트에러)다
+    if (err) {
+      console.error(err);
+      next(err);
+    }
 
-    console.log("정체", exUser.dataValues.password);
-  } catch (error) {
-    console.error(error);
-    next(error);
-  }
+    if (info) {
+      //401 허가되지 않음 / 403 금지
+      //출처: http 상태코드
+      return res.status(401).send(info.reason);
+    }
+
+    //성공시 '패스포트 로그인' 실행
+    // passport/index.js
+    return req.login(user, async (loginErr) => {
+      if (loginErr) {
+        console.error(loginErr);
+        return next(loginErr);
+      }
+      return res.status(200).json(user);
+    });
+  })(req, res, next);
+});
+
+router.post("/user/logout", (req, res, next) => {
+  req.logout();
+  req.session.destroy();
+  res.send("ok");
 });
 
 module.exports = router;

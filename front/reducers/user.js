@@ -189,7 +189,7 @@ export default (state = initialState, action) => {
         ...state,
         logInLoading: false,
         logInDone: true,
-        me: dummyUser(action.data),
+        me: action.data,
       };
     case LOG_IN_FAILURE:
       return {

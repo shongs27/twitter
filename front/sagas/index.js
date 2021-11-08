@@ -1,5 +1,6 @@
 //saga의 이펙트들
 import { all, fork } from 'redux-saga/effects';
+import axios from 'axios';
 
 //take는 evnetlistener와 비슷
 // takeLeading - 매번 누를때 첫번째 응답만 반환
@@ -11,6 +12,9 @@ import { all, fork } from 'redux-saga/effects';
 //call은 응답을 기다린다
 import postSaga from './post';
 import userSaga from './user';
+
+//baseURL을 설정해야 sagaAPI 요청 주소를 줄여쓸 수 있다
+axios.defaults.baseURL = 'http://localhost:8080';
 
 export default function* rootSaga() {
   yield all([fork(userSaga), fork(postSaga)]);
