@@ -1,6 +1,7 @@
 const dotenv = require("dotenv");
 dotenv.config();
 
+//데이터베이스를 따로 둔다
 module.exports = {
   development: {
     username: "root",

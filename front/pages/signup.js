@@ -3,7 +3,6 @@ import { Form, Input, Checkbox, Button } from 'antd';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import { useDispatch, useSelector } from 'react-redux';
-import Router from 'next/router';
 import AppLayout from '../components/AppLayout';
 import LoginForm from '../components/LoginForm';
 import { SIGN_UP_REQUEST } from '../reducers/user';
@@ -15,7 +14,7 @@ const ErrorMessage = styled.div`
 
 function Signup() {
   const dispatch = useDispatch();
-  const { signUpLoading, signUpDone, signUpError } = useSelector(
+  const { signUpLoading, signUpDone, signUpError, me } = useSelector(
     (state) => state.user,
   );
 
@@ -60,6 +59,17 @@ function Signup() {
   //     Router.push('/');
   //   }
   // }, [signUpDone]);
+
+  useEffect(() => {
+    if (me && me.id) {
+    }
+  });
+
+  useEffect(() => {
+    if (signUpDone) {
+      alert(signUpDone);
+    }
+  });
 
   useEffect(() => {
     if (signUpError) {
@@ -120,7 +130,7 @@ function Signup() {
             {TermError && <ErrorMessage>약관에 동의하셔야 합니다</ErrorMessage>}
           </div>
           <div style={{ marginTop: 10 }}>
-            <Button type="primary" htmlType="submit">
+            <Button type="primary" htmlType="submit" loading={signUpLoading}>
               가입하기
             </Button>
           </div>

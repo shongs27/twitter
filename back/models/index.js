@@ -17,6 +17,7 @@ db.Image = require("./image")(sequelize, Sequelize);
 db.Post = require("./post")(sequelize, Sequelize);
 db.User = require("./user")(sequelize, Sequelize);
 
+//관계들 등록해줌
 Object.keys(db).forEach((modelName) => {
   if (db[modelName].associate) {
     db[modelName].associate(db);

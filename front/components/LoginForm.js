@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useEffect } from 'react';
 import { Form, Input, Button } from 'antd';
 import Link from 'next/link';
 import { useDispatch, useSelector } from 'react-redux';
@@ -17,20 +17,26 @@ const FormWrapper = styled(Form)`
 `;
 
 function LoginForm() {
-  const { logInLoading } = useSelector((state) => state.user);
+  const { logInLoading, logInError } = useSelector((state) => state.user);
   const dispatch = useDispatch();
 
   //1방법. CustomHook - 지저분한 Form으로 인한 상태, 함수를 일시에 정리할 수 있다
   const [email, onChangeEmail] = useInput('');
   //2방법. 컴포넌트에 props로 넘겨주는 함수는 useCallback을 꼭 써줘야 최적화가 된다
-  const [Password, setPassword] = useState('');
+  const [password, setpassword] = useState('');
 
-  const onChangePassword = useCallback((e) => {
-    setPassword(e.target.value);
+  const onChangepassword = useCallback((e) => {
+    setpassword(e.target.value);
   }, []);
   const onSubmitForm = useCallback(() => {
-    dispatch(loginRequestAction({ email, Password }));
-  }, [email, Password]);
+    dispatch(loginRequestAction({ email, password }));
+  }, [email, password]);
+
+  useEffect(() => {
+    if (logInError) {
+      alert(logInError);
+    }
+  }, [logInError]);
 
   return (
     <FormWrapper onFinish={onSubmitForm}>
@@ -50,8 +56,8 @@ function LoginForm() {
         <Input
           name="user-password"
           type="password"
-          value={Password}
-          onChange={onChangePassword}
+          value={password}
+          onChange={onChangepassword}
           required
         />
       </div>
