@@ -190,7 +190,7 @@ npx sequelize init - sequelize 세팅
   다대다관계일때는 중간에 테이블이 생긴다(관계를 이어줌)
   through는 테이블 이름을 바꿔주고 foreignKey는 칼럼의 이름을 바꿔줬다고 생각하면 된다 (User-User 공통되니깐 헷갈려서)
 
-- db 만들기
+- DB 만들기
   npx sequelize db:create
 
 공식문서를 보고 비동기함수로 파악이 되면 async await로 결과값을 콜백처리할 수 있게 하자
@@ -205,7 +205,7 @@ res.send() --- 두번 쓰는건x return으로 처리해주기
   400 클라이언트 에러
   500 서버 에러
 
-# CORS (Cross Origin Resource Sharing)
+## CORS (Cross Origin Resource Sharing)
 
 CORS문제는 '브라우저'에서 다른 도메인으로의 http요청을 막는다
 => 백엔드 서버에 바로 정보를 탈취하는 해킹을 방지하기 위한 것으로 브라우저의 정책이다
@@ -249,3 +249,8 @@ deserializeUser는 로그인 후 발생하는 모든 라우터 요청 직전에 
 - 미들웨어 처리에서 next('오류내용')들은 모두
   app.js에 app.listen(포트번호, () => {}) 위에 존재하는 에러처리 미들웨어에 모인다
 - app.use((err,req,res,next)=> {}) 기본적으로 존재한다
+
+## URI 파라미터
+
+URI에서 동적으로 바뀌는 부분을 파라미터라고 한다
+접근하려면 'req.params.파라미터이름'으로 접근 가능함

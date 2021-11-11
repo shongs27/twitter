@@ -129,26 +129,26 @@ export const addComment = (commentText, postId, userId) => ({
   data: { content: commentText, postId, userId },
 });
 
-const dummyPost = (data) => ({
-  //더미데이터 중복되지 않는거 만들기
-  id: data.id,
-  content: data.content,
-  User: {
-    id: 1,
-    nickname: '제로초',
-  },
-  Images: [],
-  Comments: [],
-});
+// const dummyPost = (data) => ({
+//   //더미데이터 중복되지 않는거 만들기
+//   id: data.id,
+//   content: data.content,
+//   User: {
+//     id: 1,
+//     nickname: '제로초',
+//   },
+//   Images: [],
+//   Comments: [],
+// });
 
-const dummyComment = (data) => ({
-  id: shortId.generate(),
-  content: data.content,
-  User: {
-    id: data.userId,
-    nickname: data.userId,
-  },
-});
+// const dummyComment = (data) => ({
+//   id: shortId.generate(),
+//   content: data.content,
+//   User: {
+//     id: data.userId,
+//     nickname: data.userId,
+//   },
+// });
 
 // (이전상태, 액션) => 다음상태로 만드는게 reducer (불변성 지켜가면서)
 export default (state = initialState, action) =>
@@ -161,7 +161,7 @@ export default (state = initialState, action) =>
         break;
       case ADD_POST_SUCCESS:
         //앞에다가 새로운 dummyPost를 추가해야 새 게시글이 위로 올라가게 보여줄수 있다
-        draft.mainPosts.unshift(dummyPost(action.data));
+        draft.mainPosts.unshift(action.data);
         draft.addPostLoading = false;
         draft.addPostDone = true;
         break;
@@ -206,8 +206,8 @@ export default (state = initialState, action) =>
         //   addCommentLoading: false,
         //   addCommentDone: true,
         // };
-        const post = draft.mainPosts.find((v) => v.id === action.data.postId);
-        post.Comments.unshift(dummyComment(action.data));
+        const post = draft.mainPosts.find((v) => v.id === action.data.PostId);
+        post.Comments.unshift(action.data);
         draft.addCommentLoading = false;
         draft.addCommentDone = true;
         break;
