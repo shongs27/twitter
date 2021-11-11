@@ -2,6 +2,8 @@
 
 ---
 
+---
+
 # 복습
 
 # Front
@@ -103,7 +105,7 @@ generator는 중단점이 있다
 
 thunk와의 차이는 '이펙트'에 있다
 throttle, takeLatest, takeLeading같은 것이 미리 구현되어 있다
-(셋 다 응답과 관련있지 요청 자체를 막지는 못한다)
+(셋 다 응답처리 이펙트이기에 요청 자체를 막지는 못한다)
 
 - 스로틀링 : 마지막 함수가 호출 된 후 일정 시간이 지나기 전에 다시 호출되지 않는것 (스크롤 움직이기)
   => 시작과 동시에 쿨타임
@@ -114,8 +116,9 @@ throttle, takeLatest, takeLeading같은 것이 미리 구현되어 있다
 -scroll 이벤트가 아니라 intersectionObserver를 참조
 -react virtualize - 인스타가 쓰는 방식
 
-프론트는 백을 만드는게 아니라
-수천개의 더미데이터를 읽으면서도 화면에 렉이 걸리지 않는 모습
+수천개의 데이터를 만들어내면서도 렉이 걸리지 않는 것이 프론트의 실력이다
+
+---
 
 ---
 
@@ -134,6 +137,7 @@ http- createServer을 통해 서버를 만들어서 req url, method에 따라서
 
 node http 보다 express 프레임워크가 코드를 구조적으로 깔끔하게 짤 수 있다 (createServer와 달리 쉽게 분리도 되니깐)
 
+```
 const server = http.createServer((req,res) => {
 if(req.method === 'get') {
 if(req.url ==='//api/posts){
@@ -145,6 +149,8 @@ if(req.url ==='//api/posts){
 app.get('/', (req,res) => {
 // 으로 깔끔하게 바뀐다
 })
+
+```
 
 get -> 가져오다
 post -> 생성하다
@@ -184,23 +190,30 @@ npx sequelize init - sequelize 세팅
   다대다관계일때는 중간에 테이블이 생긴다(관계를 이어줌)
   through는 테이블 이름을 바꿔주고 foreignKey는 칼럼의 이름을 바꿔줬다고 생각하면 된다 (User-User 공통되니깐 헷갈려서)
 
-공식문서를 보고 비동기함수인지 아닌지 파악해야 한다
-그래서 async await 처리
+- db 만들기
+  npx sequelize db:create
+
+공식문서를 보고 비동기함수로 파악이 되면 async await로 결과값을 콜백처리할 수 있게 하자
 
 응답은 한번만 보내야 한다
 res.send()
 res.send() --- 두번 쓰는건x return으로 처리해주기
 
-200 성공
-300 리다이렉트 / 캐싱
-400 클라이언트 에러
-500 서버 에러
+- http 상태코드
+  200 성공
+  300 리다이렉트 / 캐싱
+  400 클라이언트 에러
+  500 서버 에러
 
-CORS문제는 '브라우저'에서 다른 도메인으로 요청을 보내고 데이터를 받는 것을 막는다
-=> 백엔드 서버에 바로 정보를 탈취하는 해킹을 방지하기 위한 것으로 브라우저의 정책임
+# CORS (Cross Origin Resource Sharing)
+
+CORS문제는 '브라우저'에서 다른 도메인으로의 http요청을 막는다
+=> 백엔드 서버에 바로 정보를 탈취하는 해킹을 방지하기 위한 것으로 브라우저의 정책이다
 => 브라우저가 막지만 허용은 서버가 한다
 
 브라우저가 아닌 서버끼리 즉, 프론트서버(3060)에서 백엔드서버(3065)로 요청 보낼때는 오류가 안걸린다
+
+next.js는 첫 로딩만 SSR 해주는 서버이고 그 다음부터는 브라우저가 소스코드를 실행시킨다
 
 - 해결책
 
@@ -209,21 +222,30 @@ CORS문제는 '브라우저'에서 다른 도메인으로 요청을 보내고 �
      브라우저(3060)에서 프론트서버(3060)으로 보내고 프론터서버(3060)에서 백엔드서버(3065)로 보낸다
 
   2. 직접 app.use((req,res,next) => res.setHeader())
-  3. 역시 라이브러리 짱! cors()
-
-- db 만들기
-  npx sequelize db:create
-
-## passport-local
-
-기존에 패스포트 라이브러리에 만든 로컬 아이디, 비밀번호를 통해 로그인 할 수 있게 도와준다
+  3. 라이브러리 app.use(cors())
 
 ## 쿠키와 세션의 차이
 
-쿠키는 클라이언트에 저장, 비휘발성
-세션은 서버에 저장한다, 휘발성, 세션 저장용 DB로 redis가 있다
+쿠키는 클라이언트에 저장, 비휘발성.
+세션은 서버에 저장한다, 휘발성, 세션 저장용 DB로 redis가 있다.
+
+## passport
+
+deserializeUser는 로그인 후 발생하는 모든 라우터 요청 직전에 다 실행됩니다.
+
+예를 들어 로그인 후 GET /abc를 하면 그 라우터를 실행하기 전에 deserializeUser가 먼저 실행돼서 abc라우터의 req에 req.user를 넣어줍니다
+
+### passport-local
+
+기존에 passport 라이브러리에 직접 만든 로컬 아이디, 비밀번호를 통해 로그인 할 수 있게 도와준다
 
 ## dotenv
 
 하드코딩을 방지하기 위한 비밀유지 라이브러리
-사용하기 위해서 config/config.json을 js로 바꿔주었다
+사용하기 위해서 config/config.json을 config.js로 바꿔주었다
+
+## 에러처리 미들웨어
+
+- 미들웨어 처리에서 next('오류내용')들은 모두
+  app.js에 app.listen(포트번호, () => {}) 위에 존재하는 에러처리 미들웨어에 모인다
+- app.use((err,req,res,next)=> {}) 기본적으로 존재한다

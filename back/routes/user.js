@@ -3,12 +3,12 @@ const router = express.Router();
 const { User, Post } = require("../models");
 const bcrypt = require("bcrypt");
 const passport = require("passport");
-const db = require("../models");
+const { isNotLoggedIn, isLoggedIn } = require("./middlewares");
 
 //User.create()는 비동기함수
 //비동기 순서 맞춰주기 위해서 (res.json()이 먼저 실행되면 안된다)
 //async 쓴다
-router.post("/", async (req, res, next) => {
+router.post("/", isLoggedIn, async (req, res, next) => {
   try {
     const exUser = await User.findOne({
       where: {
@@ -34,7 +34,7 @@ router.post("/", async (req, res, next) => {
 
 //미들웨어 확장
 //passport.authenticate가 미들웨어를 사용하기 위해 확장하는 방법
-router.post("/login", (req, res, next) => {
+router.post("/login", isNotLoggedIn, (req, res, next) => {
   //passport/local.js 전략을 실행
   passport.authenticate("local", (err, user, info) => {
     //(err,user,info)는 done(서버에러, 성공, 클라이언트에러)다
@@ -56,9 +56,11 @@ router.post("/login", (req, res, next) => {
         console.error(loginErr);
         return next(loginErr);
       }
+
+      //'user' 재활용 안하고 다시 'user'찾아서 include, exclude 포함시켜줌
       const fullUserWithoutPassword = await User.findOne({
         where: { id: user.id },
-        attribute: {
+        attributes: {
           exclude: ["password"],
         },
         include: [
@@ -81,7 +83,7 @@ router.post("/login", (req, res, next) => {
   })(req, res, next);
 });
 
-router.post("/user/logout", (req, res, next) => {
+router.post("/logout", isLoggedIn, (req, res) => {
   req.logout();
   req.session.destroy();
   res.send("ok");

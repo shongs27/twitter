@@ -53,7 +53,6 @@ app.use(express.json());
 //form형식의 데이터를 넣어줌
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser(process.env.COOKIE_SECRET));
-
 app.use(
   session({
     saveUninitialized: false,

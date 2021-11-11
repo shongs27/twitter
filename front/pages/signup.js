@@ -3,6 +3,7 @@ import { Form, Input, Checkbox, Button } from 'antd';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import { useDispatch, useSelector } from 'react-redux';
+import Router from 'next/router';
 import AppLayout from '../components/AppLayout';
 import LoginForm from '../components/LoginForm';
 import { SIGN_UP_REQUEST } from '../reducers/user';
@@ -62,6 +63,9 @@ function Signup() {
 
   useEffect(() => {
     if (me && me.id) {
+      //push는 이전 페이지 기록 남음
+      //replace는 이전 페이지 기록 삭제하고 들어감
+      Router.replace('/');
     }
   });
 
