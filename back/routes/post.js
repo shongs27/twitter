@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const { Post, Comment } = require("../models");
+const { Post, Comment, User, Image } = require("../models");
 const { isLoggedIn } = require("./middlewares");
 
 router.post("/", isLoggedIn, async (req, res, next) => {
@@ -9,9 +9,20 @@ router.post("/", isLoggedIn, async (req, res, next) => {
       content: req.body.content,
       UserId: req.body.userId,
     });
-    //꼭 확인해보자
-    console.log("post.create 한 것", post);
-    res.status(201).json(post);
+    const fullPost = await Post.findOne({
+      where: { id: post.id },
+      include: [
+        { model: Image },
+        {
+          model: Comment,
+        },
+        {
+          model: User,
+        },
+      ],
+    });
+    console.log("이것이 fullPost:", fullPost);
+    res.status(201).json(fullPost);
   } catch (error) {
     console.error(error);
     next(error);

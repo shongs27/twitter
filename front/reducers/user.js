@@ -1,10 +1,13 @@
 import produce from 'immer';
 
 export const initialState = {
-  followLoading: false, //로그인 시도중
+  loadUserLoading: false, //유저정보 가져오기 시도중
+  loadUserDone: false,
+  loadUserError: null,
+  followLoading: false, //팔로우 시도중
   followDone: false,
   followError: null,
-  unfollowLoading: false, //로그인 시도중
+  unfollowLoading: false, //언팔로우 시도중
   unfollowDone: false,
   unfollowError: null,
   logInLoading: false, //로그인 시도중
@@ -39,6 +42,10 @@ export const initialState = {
 //     });
 // };
 
+export const LOAD_MY_INFO_REQUEST = 'LOAD_MY_INFO_REQUEST';
+export const LOAD_MY_INFO_SUCCESS = 'LOAD_MY_INFO_SUCCESS';
+export const LOAD_MY_INFO_FAILURE = 'LOAD_MY_INFO_FAILURE';
+
 export const LOG_IN_REQUEST = 'LOG_IN_REQUEST';
 export const LOG_IN_SUCCESS = 'LOG_IN_SUCCESS';
 export const LOG_IN_FAILURE = 'LOG_IN_FAILURE';
@@ -66,22 +73,22 @@ export const UNFOLLOW_FAILURE = 'UNFOLLOW_FAILURE';
 export const ADD_POST_TO_ME = 'ADD_POST_TO_ME';
 export const REMOVE_POST_OF_ME = 'REMOVE_POST_OF_ME';
 
-const dummyUser = (data) => ({
-  ...data,
-  nickname: '제로초',
-  id: 1,
-  Posts: [{ id: 1 }],
-  Followings: [
-    { nickname: '부기초' },
-    { nickname: '김재호' },
-    { nickname: '알던팍' },
-  ],
-  Followers: [
-    { nickname: '부기초' },
-    { nickname: '김재호' },
-    { nickname: '알던팍' },
-  ],
-});
+// const dummyUser = (data) => ({
+//   ...data,
+//   nickname: '제로초',
+//   id: 1,
+//   Posts: [{ id: 1 }],
+//   Followings: [
+//     { nickname: '부기초' },
+//     { nickname: '김재호' },
+//     { nickname: '알던팍' },
+//   ],
+//   Followers: [
+//     { nickname: '부기초' },
+//     { nickname: '김재호' },
+//     { nickname: '알던팍' },
+//   ],
+// });
 
 ////// LOGIN 액션
 export const loginRequestAction = (data) => {
@@ -129,6 +136,28 @@ export const logoutRequestAction = () => {
 // (이전상태, 액션) => 다음상태
 export default (state = initialState, action) => {
   switch (action.type) {
+    case LOAD_MY_INFO_REQUEST:
+      return {
+        ...state,
+        loadUserLoading: true,
+        loadUserError: null,
+        loadUserDone: false,
+      };
+    case LOAD_MY_INFO_SUCCESS:
+      return {
+        ...state,
+        loadUserLoading: false,
+        loadUserDone: true,
+        me: {
+          ...action.data,
+        },
+      };
+    case LOAD_MY_INFO_FAILURE:
+      return {
+        ...state,
+        loadUserLoading: false,
+        loadUserError: action.error,
+      };
     case FOLLOW_REQUEST:
       return {
         ...state,

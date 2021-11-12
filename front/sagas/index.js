@@ -15,6 +15,7 @@ import userSaga from './user';
 
 //baseURL을 설정해야 sagaAPI 요청 주소를 줄여쓸 수 있다
 axios.defaults.baseURL = 'http://localhost:8080';
+axios.defaults.withCredentials = true;
 
 export default function* rootSaga() {
   yield all([fork(userSaga), fork(postSaga)]);

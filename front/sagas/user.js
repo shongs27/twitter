@@ -6,18 +6,22 @@ import {
   call,
   takeEvery,
   takeLatest,
+  takeLeading,
 } from 'redux-saga/effects';
 import axios from 'axios';
 import {
-  LOG_IN_FAILURE,
+  LOAD_MY_INFO_REQUEST,
+  LOAD_MY_INFO_SUCCESS,
+  LOAD_MY_INFO_FAILURE,
   LOG_IN_REQUEST,
   LOG_IN_SUCCESS,
-  LOG_OUT_FAILURE,
+  LOG_IN_FAILURE,
   LOG_OUT_REQUEST,
   LOG_OUT_SUCCESS,
+  LOG_OUT_FAILURE,
   SIGN_UP_REQUEST,
-  SIGN_UP_FAILURE,
   SIGN_UP_SUCCESS,
+  SIGN_UP_FAILURE,
   FOLLOW_REQUEST,
   FOLLOW_SUCCESS,
   FOLLOW_FAILURE,
@@ -35,10 +39,11 @@ function* logIn(action) {
     //fork 비동기실행 (요청보내고 바로 다음꺼 실행) - axios요청과 비슷 - 논블록킹
     //call 동기실행 (기다림) - await와 비슷 - 블록킹
     const result = yield call(logInAPI, action.data);
-    yield put({
-      type: LOG_IN_SUCCESS,
-      data: result.data,
-    });
+    if (result)
+      yield put({
+        type: LOG_IN_SUCCESS,
+        data: result.data,
+      });
   } catch (err) {
     yield put({
       type: LOG_IN_FAILURE,
@@ -114,6 +119,27 @@ function* unfollow(action) {
   }
 }
 
+function loadUserAPI() {
+  return axios.get('/user');
+}
+
+function* loadUser(action) {
+  try {
+    //fork 비동기실행 (요청보내고 바로 다음꺼 실행) - axios요청과 비슷 - 논블록킹
+    //call 동기실행 (기다림) - await와 비슷 - 블록킹
+    const result = yield call(loadUserAPI, action.data);
+    yield put({
+      type: LOAD_MY_INFO_SUCCESS,
+      data: result.data,
+    });
+  } catch (err) {
+    yield put({
+      type: LOAD_MY_INFO_FAILURE,
+      error: err.response.data,
+    });
+  }
+}
+
 function* watchLogIn() {
   //1. while take를 통해 동기적 동작
   // while (true) {
@@ -140,6 +166,10 @@ function* watchUnfollow() {
   yield takeLatest(UNFOLLOW_REQUEST, unfollow);
 }
 
+function* watchLoading() {
+  yield takeLeading(LOAD_MY_INFO_REQUEST, loadUser);
+}
+
 export default function* userSaga() {
   yield all([
     fork(watchLogIn),
@@ -147,5 +177,6 @@ export default function* userSaga() {
     fork(watchSignUp),
     fork(watchFollow),
     fork(watchUnfollow),
+    fork(watchLoading),
   ]);
 }

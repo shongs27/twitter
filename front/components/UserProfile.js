@@ -17,23 +17,23 @@ function UserProfile() {
         <div key="twit">
           짹짹
           <br />
-          {me.Posts.length}
+          {me.length && me.Posts.length}
         </div>,
         <div key="followings">
           팔로잉
           <br />
-          {me.Followings.length}
+          {me.length && me.Followings.length}
         </div>,
         <div key="followers">
           팔로워
           <br />
-          {me.Followers.length}
+          {me.length && me.Followers.length}
         </div>,
       ]}
     >
       <Card.Meta
-        avatar={<Avatar>{me.nickname[0]}</Avatar>}
-        title={me.nickname}
+        avatar={<Avatar>{me.length && me.nickname[0]}</Avatar>}
+        title={me.length && me.nickname}
       />
       <Button onClick={onLogOut} loading={logOutLoading}>
         로그아웃

@@ -66,6 +66,7 @@ app.use(passport.session());
 // app.use("/api/users", require("./routers/users"));
 app.use("/post", require("./routes/post"));
 app.use("/user", require("./routes/user"));
+
 app.listen(8080, () => {
   console.log("환영합니다 백서버");
 });

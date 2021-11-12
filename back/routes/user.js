@@ -5,6 +5,41 @@ const bcrypt = require("bcrypt");
 const passport = require("passport");
 const { isNotLoggedIn, isLoggedIn } = require("./middlewares");
 
+//새로고침 할때마다 get을 보낼 것임
+router.get("/", async (req, res, next) => {
+  try {
+    if (req.user) {
+      const fullUserWithoutPassword = await User.findOne({
+        where: { id: req.user.id },
+        attributes: {
+          exclude: ["password"],
+        },
+        include: [
+          {
+            model: Post,
+            //포스트 다 가져오면 용량 엄청나니깐 id만 가져오자
+            // attributes: ["id"],
+          },
+          {
+            model: User,
+            as: "Followings",
+            // attributes: ["id"],
+          },
+          {
+            model: User,
+            as: "Followers",
+            // attributes: ["id"],
+          },
+        ],
+      });
+      res.status(200).json(fullUserWithoutPassword);
+    } else res.status(200).json(null);
+  } catch (error) {
+    console.error(error);
+    next("로그인 안되죠");
+  }
+});
+
 //User.create()는 비동기함수
 //비동기 순서 맞춰주기 위해서 (res.json()이 먼저 실행되면 안된다)
 //async 쓴다
@@ -66,14 +101,17 @@ router.post("/login", isNotLoggedIn, (req, res, next) => {
         include: [
           {
             model: Post,
+            attributes: ["id"],
           },
           {
             model: User,
             as: "Followings",
+            attributes: ["id"],
           },
           {
             model: User,
             as: "Followers",
+            attributes: ["id"],
           },
         ],
       });
