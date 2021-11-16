@@ -8,6 +8,8 @@ const passport = require("passport");
 const passportConfig = require("./passport");
 const dotenv = require("dotenv");
 
+const morgan = require("morgan");
+
 const app = express();
 
 //시퀄라이즈 가져오기
@@ -19,14 +21,6 @@ db.sequelize
   })
   .catch(console.error);
 
-app.get("/", (req, res) => {
-  res.send("반갑습니다 get입니다");
-});
-
-app.post("/", (req, res) => {
-  res.send("반갑습니다 post입니다");
-});
-
 //cors해결책 - 1. 직접
 // app.use((req, res, next) => {
 //   res.setHeader("Access-Control-Allow-Origin", "*");
@@ -36,6 +30,7 @@ app.post("/", (req, res) => {
 //   return next();
 // });
 
+app.use(morgan("dev"));
 // 2. cors해결책 - 2. 라이브러리
 app.use(
   cors({
@@ -64,6 +59,7 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 // app.use("/api/users", require("./routers/users"));
+app.use("/posts", require("./routes/posts"));
 app.use("/post", require("./routes/post"));
 app.use("/user", require("./routes/user"));
 

@@ -15,7 +15,7 @@ function index() {
     //사용자 불러오기
     dispatch({ type: LOAD_MY_INFO_REQUEST });
     //게시글 불러오기
-    // dispatch({ type: LOAD_POSTS_REQUEST });
+    dispatch({ type: LOAD_POSTS_REQUEST });
   }, []);
 
   return (

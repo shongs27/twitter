@@ -5,7 +5,7 @@ const bcrypt = require("bcrypt");
 const passport = require("passport");
 const { isNotLoggedIn, isLoggedIn } = require("./middlewares");
 
-//새로고침 할때마다 get을 보낼 것임
+//새로고침 할때마다 get을 보냄
 router.get("/", async (req, res, next) => {
   try {
     if (req.user) {
@@ -18,17 +18,17 @@ router.get("/", async (req, res, next) => {
           {
             model: Post,
             //포스트 다 가져오면 용량 엄청나니깐 id만 가져오자
-            // attributes: ["id"],
+            attributes: ["id"],
           },
           {
             model: User,
             as: "Followings",
-            // attributes: ["id"],
+            attributes: ["id"],
           },
           {
             model: User,
             as: "Followers",
-            // attributes: ["id"],
+            attributes: ["id"],
           },
         ],
       });
@@ -36,34 +36,7 @@ router.get("/", async (req, res, next) => {
     } else res.status(200).json(null);
   } catch (error) {
     console.error(error);
-    next("로그인 안되죠");
-  }
-});
-
-//User.create()는 비동기함수
-//비동기 순서 맞춰주기 위해서 (res.json()이 먼저 실행되면 안된다)
-//async 쓴다
-router.post("/", isLoggedIn, async (req, res, next) => {
-  try {
-    const exUser = await User.findOne({
-      where: {
-        email: req.body.email,
-      },
-    });
-    if (exUser) {
-      return res.status(403).send("이미 사용중인 아이디입니다");
-    }
-    const hashedPassword = await bcrypt.hash(req.body.password, 10);
-    await User.create({
-      email: req.body.email,
-      nickname: req.body.nickname,
-      password: hashedPassword,
-    });
-    res.status(200).send("ok");
-  } catch (error) {
-    console.error(error);
-    //한방에 next()로 모아서 처리??
-    next(error); //status 500번대
+    next("자동 로그인이 안됩니다");
   }
 });
 
@@ -125,6 +98,31 @@ router.post("/logout", isLoggedIn, (req, res) => {
   req.logout();
   req.session.destroy();
   res.send("ok");
+});
+
+//User.create()는 비동기함수 - 순서 동기화하기 위해 async await
+router.post("/", isNotLoggedIn, async (req, res, next) => {
+  try {
+    const exUser = await User.findOne({
+      where: {
+        email: req.body.email,
+      },
+    });
+    if (exUser) {
+      return res.status(403).send("이미 사용중인 아이디입니다");
+    }
+    const hashedPassword = await bcrypt.hash(req.body.password, 10);
+    await User.create({
+      email: req.body.email,
+      nickname: req.body.nickname,
+      password: hashedPassword,
+    });
+    res.status(200).send("ok");
+  } catch (error) {
+    console.error(error);
+    //한방에 next()로 모아서 처리??
+    next(error); //status 500번대
+  }
 });
 
 module.exports = router;

@@ -15,13 +15,19 @@ router.post("/", isLoggedIn, async (req, res, next) => {
         { model: Image },
         {
           model: Comment,
+          include: [
+            {
+              model: User,
+              attributes: ["id", "nickname"],
+            },
+          ],
         },
         {
           model: User,
+          attribuets: ["id", "nickname"],
         },
       ],
     });
-    console.log("이것이 fullPost:", fullPost);
     res.status(201).json(fullPost);
   } catch (error) {
     console.error(error);
@@ -39,10 +45,19 @@ router.post("/:postId/comment", isLoggedIn, async (req, res, next) => {
     }
     const comment = await Comment.create({
       content: req.body.content,
-      PostId: req.params.postId,
-      UserId: req.body.userId, //deserializeUser 저장되있는 req.user
+      PostId: parseInt(req.params.postId, 10),
+      UserId: req.user.id, //deserializeUser 저장되있는 req.user
     });
-    res.status(201).json(comment);
+    const fullComment = await Comment.findOne({
+      where: { id: comment.id },
+      include: [
+        {
+          model: User,
+          attribute: ["id", "nickname"],
+        },
+      ],
+    });
+    res.status(201).json(fullComment);
   } catch (error) {
     console.error(error);
     next(error);

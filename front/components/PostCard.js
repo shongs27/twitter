@@ -38,6 +38,8 @@ function PostCard({ post }) {
     });
   }, []);
 
+  console.log('이게바로 포스트입니다', post, typeof post.User.id);
+  console.log(id, typeof id);
   return (
     <div style={{ marginBottom: '20px' }}>
       <Card
@@ -118,6 +120,7 @@ PostCard.propTypes = {
     User: PropTypes.object,
     UserId: PropTypes.number,
     content: PropTypes.string,
+    //string이다
     createdAt: PropTypes.object,
     Comments: PropTypes.arrayOf(PropTypes.any),
     Images: PropTypes.arrayOf(PropTypes.any),
