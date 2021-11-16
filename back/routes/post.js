@@ -3,11 +3,12 @@ const router = express.Router();
 const { Post, Comment, User, Image } = require("../models");
 const { isLoggedIn } = require("./middlewares");
 
+//포스트 만들기
 router.post("/", isLoggedIn, async (req, res, next) => {
   try {
     const post = await Post.create({
       content: req.body.content,
-      UserId: req.body.userId,
+      UserId: req.user.id,
     });
     const fullPost = await Post.findOne({
       where: { id: post.id },
@@ -35,6 +36,7 @@ router.post("/", isLoggedIn, async (req, res, next) => {
   }
 });
 
+//댓글 만들기
 router.post("/:postId/comment", isLoggedIn, async (req, res, next) => {
   try {
     const post = await Post.findOne({
@@ -53,7 +55,7 @@ router.post("/:postId/comment", isLoggedIn, async (req, res, next) => {
       include: [
         {
           model: User,
-          attribute: ["id", "nickname"],
+          attributes: ["id", "nickname"],
         },
       ],
     });

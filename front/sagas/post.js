@@ -47,7 +47,7 @@ function* loadPosts(action) {
 }
 
 function addPostAPI(data) {
-  return axios.post('/post/', { content: data }, { withCredentials: true });
+  return axios.post('/post', { content: data }, { withCredentials: true });
 }
 
 function* addPost(action) {
