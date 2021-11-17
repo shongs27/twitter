@@ -18,14 +18,19 @@ router.post("/", isLoggedIn, async (req, res, next) => {
           model: Comment,
           include: [
             {
-              model: User,
+              model: User, //댓글 작성자
               attributes: ["id", "nickname"],
             },
           ],
         },
         {
-          model: User,
+          model: User, //게시글 작성자
           attribuets: ["id", "nickname"],
+        },
+        {
+          model: User, //좋아요 누른 사람
+          as: "Likers",
+          attribue: ["id"],
         },
       ],
     });
@@ -65,4 +70,53 @@ router.post("/:postId/comment", isLoggedIn, async (req, res, next) => {
     next(error);
   }
 });
+
+router.patch("/:postId/like", isLoggedIn, async (req, res, next) => {
+  try {
+    //db조작할때는 항상 await를 쓰자
+    const post = await Post.findOne({ where: { id: req.params.postId } });
+
+    if (!post) {
+      return res.status(403).send("게시글이 존재하지 않습니다.");
+    }
+    //시퀄라이즈 고유기능
+    //손쉽게 데이터 추가
+    await post.addLikers(req.user.id);
+    return res.json({ PostId: post.id, UserId: req.user.id });
+  } catch (error) {
+    console.error(error);
+    next(error);
+  }
+});
+
+router.delete("/:postId/like", isLoggedIn, async (req, res, next) => {
+  try {
+    //db조작할때는 항상 await를 쓰자
+    const post = await Post.findOne({ where: { id: req.params.postId } });
+    if (!post) {
+      return res.status(403).send("게시글이 존재하지 않습니다.");
+    }
+    //시퀄라이즈 고유기능
+    //손쉽게 데이터 날림
+    await post.removeLikers(req.user.id);
+    return res.json({ PostId: post.id, UserId: req.user.id });
+  } catch (error) {
+    console.error(error);
+    next(error);
+  }
+});
+
+router("/:postId", isLoggedIn, async (req, res, next) => {
+  try {
+    console.log("삭제할때 params", req.params);
+    await Post.destroy({
+      where: { id: req.params.postId, UserId: req.user.id },
+    });
+    res.json({ PostId: req.params.postId });
+  } catch (err) {
+    console.error(err);
+    next(err);
+  }
+});
+
 module.exports = router;

@@ -15,6 +15,8 @@ import userSaga from './user';
 
 //baseURL을 설정해야 sagaAPI 요청 주소를 줄여쓸 수 있다
 axios.defaults.baseURL = 'http://localhost:8080';
+//requestheader에 자동으로 쿠키값 넣어주는 cors옵션
+//백엔드에서는 app.use({credentials: true})
 axios.defaults.withCredentials = true;
 
 export default function* rootSaga() {

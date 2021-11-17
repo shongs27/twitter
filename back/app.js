@@ -31,10 +31,12 @@ db.sequelize
 // });
 
 app.use(morgan("dev"));
-// 2. cors해결책 - 2. 라이브러리
+//cors해결책 - 2. 라이브러리
 app.use(
   cors({
     origin: "http://localhost:3060",
+    //request header에 쿠키 자동으로 넣어주는 옵션
+    //front에서는 withCredentials 옵션
     credentials: true,
   })
 );

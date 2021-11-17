@@ -14,13 +14,13 @@ module.exports = (sequelize, DataTypes) => {
     }
   );
   Post.associate = (db) => {
-    db.Post.belongsTo(db.User);
-    //through는 중간에 생기는 테이블 이름, as는 데이터 가져올때 씀
-    db.Post.belongsToMany(db.User, { through: "Like", as: "Likers" });
-    db.Post.hasMany(db.Comment);
-    db.Post.hasMany(db.Image);
-    db.Post.belongsToMany(db.Hashtag, { through: "PostHashtag" });
-    db.Post.belongsTo(db.Post, { as: "Retweet" });
+    db.Post.belongsTo(db.User); //Post.addUser, Post.getUser, Post.setUser
+    //through는 중간에 생기는 테이블 이름, as는 참조할때 쓸 이름
+    db.Post.belongsToMany(db.User, { through: "Like", as: "Likers" }); //Post.addLikers, Post.removeLikers
+    db.Post.hasMany(db.Comment); //Post.addComments
+    db.Post.hasMany(db.Image); //Post.addImage
+    db.Post.belongsToMany(db.Hashtag, { through: "PostHashtag" }); //Post.addHashtags
+    db.Post.belongsTo(db.Post, { as: "Retweet" }); //Post.addRetweet
   };
   return Post;
 };
