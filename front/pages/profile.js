@@ -34,8 +34,6 @@ function profile() {
   return (
     <>
       <AppLayout>
-        {/* 큼직큼직하게 먼저 가상의 컴포넌트를 만든다
-         */}
         <NicknameEditForm />
         <FollowList header="팔로잉" data={me.Follwings} />
         <FollowerList header="팔로워" data={me.Followers} />

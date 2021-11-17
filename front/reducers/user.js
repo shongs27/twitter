@@ -275,7 +275,7 @@ export default (state = initialState, action) => {
     case CHANGE_NICKNAME_SUCCESS:
       return {
         ...state,
-        nickname: action.data.nickname,
+        me: { ...state.me, nickname: action.data.nickname },
         changeNicknameLoading: false,
         changeNicknameDone: true,
       };

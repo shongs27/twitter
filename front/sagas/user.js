@@ -131,6 +131,7 @@ function* loadUser(action) {
     //fork 비동기실행 (요청보내고 바로 다음꺼 실행) - axios요청과 비슷 - 논블록킹
     //call 동기실행 (기다림) - await와 비슷 - 블록킹
     const result = yield call(loadUserAPI, action.data);
+    console.log(result);
     if (result.data)
       yield put({
         type: LOAD_MY_INFO_SUCCESS,

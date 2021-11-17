@@ -106,13 +106,12 @@ router.delete("/:postId/like", isLoggedIn, async (req, res, next) => {
   }
 });
 
-router("/:postId", isLoggedIn, async (req, res, next) => {
+router.delete("/:postId", isLoggedIn, async (req, res, next) => {
   try {
-    console.log("삭제할때 params", req.params);
     await Post.destroy({
       where: { id: req.params.postId, UserId: req.user.id },
     });
-    res.json({ PostId: req.params.postId });
+    res.json({ PostId: parseInt(req.params.postId) });
   } catch (err) {
     console.error(err);
     next(err);

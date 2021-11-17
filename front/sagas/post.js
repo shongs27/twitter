@@ -84,11 +84,11 @@ function* removePost(action) {
     const result = yield call(removePostAPI, action.data);
     yield put({
       type: REMOVE_POST_SUCCESS,
-      data: action.data,
+      data: result.data.PostId,
     });
     yield put({
       type: REMOVE_POST_OF_ME,
-      data: action.data,
+      data: result.data.PostId,
     });
   } catch (err) {
     yield put({
