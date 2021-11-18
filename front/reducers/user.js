@@ -22,6 +22,12 @@ export const initialState = {
   changeNicknameLoading: false, //닉네임 시도중
   changeNicknameDone: false,
   changeNicknameError: null,
+  LoadFollowersLoading: false, //팔로워 가져오기
+  LoadFollowersDone: false,
+  LoadFollowersError: null,
+  LoadFollowingsLoading: false, //팔로잉 가져오기
+  LoadFollowingsDone: false,
+  LoadFollowingsError: null,
   me: null,
   signUpData: {},
   loginData: {},
@@ -72,6 +78,14 @@ export const UNFOLLOW_FAILURE = 'UNFOLLOW_FAILURE';
 
 export const ADD_POST_TO_ME = 'ADD_POST_TO_ME';
 export const REMOVE_POST_OF_ME = 'REMOVE_POST_OF_ME';
+
+export const LOAD_FOLLOWINGS_REQUEST = 'LOAD_FOLLOWINGS_REQUEST';
+export const LOAD_FOLLOWINGS_SUCCESS = 'LOAD_FOLLOWINGS_SUCCESS';
+export const LOAD_FOLLOWINGS_FAILURE = 'LOAD_FOLLOWINGS_FAILURE';
+
+export const LOAD_FOLLOWERS_REQUEST = 'LOAD_FOLLOWERS_REQUEST';
+export const LOAD_FOLLOWERS_SUCCESS = 'LOAD_FOLLOWERS_SUCCESS';
+export const LOAD_FOLLOWERS_FAILURE = 'LOAD_FOLLOWERS_FAILURE';
 
 // const dummyUser = (data) => ({
 //   ...data,
@@ -172,7 +186,7 @@ export default (state = initialState, action) => {
         followDone: true,
         me: {
           ...state.me,
-          Followings: [{ id: action.data }, ...state.me.Followings],
+          Followings: [{ id: action.data.UserId }, ...state.me.Followings],
         },
       };
     case FOLLOW_FAILURE:
@@ -189,7 +203,9 @@ export default (state = initialState, action) => {
         unfollowDone: false,
       };
     case UNFOLLOW_SUCCESS: {
-      const test = state.me.Followings.filter((v) => v.id !== action.data);
+      const test = state.me.Followings.filter(
+        (v) => v.id !== action.data.UserId,
+      );
       return {
         ...state,
         unfollowLoading: false,
@@ -300,6 +316,54 @@ export default (state = initialState, action) => {
           ...state.me,
           Posts: state.me.Posts.filter((v) => v.id !== action.data),
         },
+      };
+
+    case LOAD_FOLLOWERS_REQUEST:
+      return {
+        ...state,
+        loadFollowersLoading: true,
+        loadFollowersError: null,
+        loadFollowersDone: false,
+      };
+    case LOAD_FOLLOWERS_SUCCESS:
+      return {
+        ...state,
+        loadFollowersLoading: false,
+        loadFollowersDone: true,
+        me: {
+          ...state.me,
+          Followers: action.data,
+        },
+      };
+    case LOAD_FOLLOWERS_FAILURE:
+      return {
+        ...state,
+        loadFollowersLoading: false,
+        loadFollowersError: action.error,
+      };
+
+    case LOAD_FOLLOWINGS_REQUEST:
+      return {
+        ...state,
+        loadFollowingsLoading: true,
+        loadFollowingsError: null,
+        loadFollowingsDone: false,
+      };
+    case LOAD_FOLLOWINGS_SUCCESS:
+      return {
+        ...state,
+        loadFollowingsLoading: false,
+        loadFollowingsDone: true,
+        me: {
+          ...state.me,
+          Followings: action.data,
+        },
+      };
+    case LOAD_FOLLOWINGS_FAILURE:
+      return {
+        ...state,
+        loadFollowingsLoading: false,
+        loadFollowingsError: action.error,
       };
     default:
       return state;

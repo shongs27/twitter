@@ -31,6 +31,8 @@ import {
   CHANGE_NICKNAME_REQUEST,
   CHANGE_NICKNAME_SUCCESS,
   CHANGE_NICKNAME_FAILURE,
+  LOAD_FOLLOWERS_REQUEST,
+  LOAD_FOLLOWINGS_REQUEST,
 } from '../reducers/user';
 
 function logInAPI(data) {
@@ -90,13 +92,16 @@ function* signUp(action) {
   }
 }
 
+function followAPI(data) {
+  return axios.patch(`/user/${data}/follow`);
+}
+
 function* follow(action) {
   try {
-    yield delay(1000);
-    // const result = yield call(logOutAPI);
+    const result = yield call(followAPI, action.data);
     yield put({
       type: FOLLOW_SUCCESS,
-      data: action.data,
+      data: result.data,
     });
   } catch (err) {
     yield put({
@@ -106,13 +111,16 @@ function* follow(action) {
   }
 }
 
+function unfollowAPI(data) {
+  return axios.delete(`/user/${data}/follow`);
+}
+
 function* unfollow(action) {
   try {
-    yield delay(1000);
-    // const result = yield call(logOutAPI);
+    const result = yield call(unfollowAPI, action.data);
     yield put({
       type: UNFOLLOW_SUCCESS,
-      data: action.data,
+      data: result.data,
     });
   } catch (err) {
     yield put({
@@ -164,6 +172,25 @@ function* changeNickname(action) {
   }
 }
 
+function loadFollowersAPI(data) {
+  return axios.patch('/user/nickname', { nickname: data });
+}
+
+function* loadFollowers(action) {
+  try {
+    const result = yield call(changeNicknameAPI, action.data);
+    yield put({
+      type: CHANGE_NICKNAME_SUCCESS,
+      data: result.data,
+    });
+  } catch (err) {
+    yield put({
+      type: CHANGE_NICKNAME_FAILURE,
+      error: err.response.data,
+    });
+  }
+}
+
 function* watchLogIn() {
   //1.동기적
   // while (true) {
@@ -198,8 +225,18 @@ function* watchChangeNickname() {
   yield takeLatest(CHANGE_NICKNAME_REQUEST, changeNickname);
 }
 
+function* watchLoadFollowers() {
+  yield takeLatest(LOAD_FOLLOWERS_REQUEST, loadFollowers);
+}
+
+function* watchLoadFollowings() {
+  yield takeLatest(LOAD_FOLLOWINGS_REQUEST, loadFollowings);
+}
+
 export default function* userSaga() {
   yield all([
+    fork(watchLoadFollowers),
+    fork(watchLoadFollowings),
     fork(watchChangeNickname),
     fork(watchLogIn),
     fork(watchLogOut),
