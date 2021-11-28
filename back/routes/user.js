@@ -177,6 +177,7 @@ router.delete("/:userId/follow", isLoggedIn, async (req, res, next) => {
   }
 });
 
+//프로필 팔로워 불러오기
 router.get("/followers", isLoggedIn, async (req, res, next) => {
   try {
     const user = await User.findOne({
@@ -185,7 +186,7 @@ router.get("/followers", isLoggedIn, async (req, res, next) => {
     if (!user) {
       res.status(403).send("언팔로우 대상이 없습니다");
     }
-    const followers = await user.removeFollowers(req.user.id);
+    const followers = await user.getFollowers(req.user.id);
     res.status(200).json(followers);
   } catch (error) {
     console.error(error);
@@ -193,6 +194,7 @@ router.get("/followers", isLoggedIn, async (req, res, next) => {
   }
 });
 
+//프로필 팔로잉 불러오기
 router.get("/followings", isLoggedIn, async (req, res, next) => {
   try {
     const user = await User.findOne({

@@ -25,6 +25,7 @@ function profile() {
   const dispatch = useDispatch();
   const { me } = useSelector((state) => state.user);
 
+  //팔로워, 팔로잉 목록 불러오기
   useEffect(() => {
     dispatch({
       type: LOAD_FOLLOWERS_REQUEST,
@@ -35,6 +36,7 @@ function profile() {
     });
   }, []);
 
+  //me정보 없는것 = 로그인 안했으면 메인으로 돌아간다
   useEffect(() => {
     if (!(me && me.id)) {
       Router.push('/');
