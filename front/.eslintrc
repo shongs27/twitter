@@ -1,5 +1,5 @@
 {
-  //babel eslint를 사용함으로써 최신문법도 에러를 발생시키지 않는다
+  //babel eslint를 사용함으로써 실험적인 최신문법도 에러를 발생시키지 않는다
   "parser": "babel-eslint",
   "parserOptions": {
     "ecmaVersion": 2020,
@@ -15,11 +15,8 @@
   },
   // "plugins": ["import", "react-hooks", "jsx-a11y"],
   "extends": [
-    //recommended는 약하다
     // "eslint:recommended",
-    // "plugin:react/recommended"
-
-    //airbnb는 강하다
+    // "plugin:react/recommended",
     "airbnb",
     "prettier"
   ],

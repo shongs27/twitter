@@ -50,7 +50,7 @@ function profile() {
     <>
       <AppLayout>
         <NicknameEditForm />
-        <FollowList header="팔로잉" data={me.Follwings} />
+        <FollowList header="팔로잉" data={me.Followings} />
         <FollowerList header="팔로워" data={me.Followers} />
       </AppLayout>
     </>

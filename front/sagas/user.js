@@ -1,6 +1,6 @@
 import {
   all,
-  delay,
+  // delay,
   put,
   fork,
   call,
@@ -32,7 +32,11 @@ import {
   CHANGE_NICKNAME_SUCCESS,
   CHANGE_NICKNAME_FAILURE,
   LOAD_FOLLOWERS_REQUEST,
+  LOAD_FOLLOWERS_SUCCESS,
+  LOAD_FOLLOWERS_FAILURE,
   LOAD_FOLLOWINGS_REQUEST,
+  LOAD_FOLLOWINGS_SUCCESS,
+  LOAD_FOLLOWINGS_FAILURE,
 } from '../reducers/user';
 
 function logInAPI(data) {
@@ -49,7 +53,6 @@ function* logIn(action) {
       data: result.data,
     });
   } catch (err) {
-    console.error(err);
     yield put({
       type: LOG_IN_FAILURE,
       error: err.response.data,
@@ -63,7 +66,7 @@ function logOutAPI() {
 
 function* logOut() {
   try {
-    const result = yield call(logOutAPI);
+    yield call(logOutAPI);
     yield put({
       type: LOG_OUT_SUCCESS,
     });
@@ -80,7 +83,7 @@ const signUpAPI = (data) => {
 
 function* signUp(action) {
   try {
-    const result = yield call(signUpAPI, action.data);
+    yield call(signUpAPI, action.data);
     yield put({
       type: SIGN_UP_SUCCESS,
     });
@@ -139,7 +142,6 @@ function* loadUser(action) {
     //fork 비동기실행 (요청보내고 바로 다음꺼 실행) - axios요청과 비슷 - 논블록킹
     //call 동기실행 (기다림) - await와 비슷 - 블록킹
     const result = yield call(loadUserAPI, action.data);
-    console.log(result);
     if (result.data)
       yield put({
         type: LOAD_MY_INFO_SUCCESS,
@@ -172,20 +174,39 @@ function* changeNickname(action) {
   }
 }
 
-function loadFollowersAPI(data) {
-  return axios.patch('/user/nickname', { nickname: data });
+function loadFollowersAPI() {
+  return axios.get('/user/followers');
 }
 
 function* loadFollowers(action) {
   try {
-    const result = yield call(changeNicknameAPI, action.data);
+    const result = yield call(loadFollowersAPI, action.data);
     yield put({
-      type: CHANGE_NICKNAME_SUCCESS,
+      type: LOAD_FOLLOWERS_SUCCESS,
       data: result.data,
     });
   } catch (err) {
     yield put({
-      type: CHANGE_NICKNAME_FAILURE,
+      type: LOAD_FOLLOWERS_FAILURE,
+      error: err.response.data,
+    });
+  }
+}
+
+function loadFollowingsAPI() {
+  return axios.get('/user/followings');
+}
+
+function* loadFollowings(action) {
+  try {
+    const result = yield call(loadFollowingsAPI, action.data);
+    yield put({
+      type: LOAD_FOLLOWINGS_SUCCESS,
+      data: result.data,
+    });
+  } catch (err) {
+    yield put({
+      type: LOAD_FOLLOWINGS_FAILURE,
       error: err.response.data,
     });
   }
